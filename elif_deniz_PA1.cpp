@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <cstdlib>
 #include <ctime>
+#include <cstring>
 
 using namespace std;
 
@@ -54,7 +55,7 @@ int main(int argc, char *argv[])
             int digit = atoi(argv[2]);
             if (digit <= 0 || !isdigit(argv[2][0])) // Check if input is less than or equal to 0
             {
-                cout << "E2" << endl;
+                cout << "E0" << endl;
                 return 0;
             }
             string secret;
@@ -85,6 +86,16 @@ int main(int argc, char *argv[])
             }
             cout << secNum;
         }
+        else 
+        {
+            cout << "E0" << endl;
+            return 0;
+        }
+    }
+    else 
+    {
+        cout << "E0" << endl;
+        return 0;
     }
     return 0;
 }
