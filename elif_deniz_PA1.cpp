@@ -52,28 +52,33 @@ int main(int argc, char *argv[])
         if (strcmp(argv[1], "-r") == 0)
         {
             int digit = atoi(argv[2]);
-            if (digit <= 0 || !isdigit(argv[2][0]) ) // Check if input is less than or equal to 0
+            if (digit <= 0 || !isdigit(argv[2][0])) // Check if input is less than or equal to 0
             {
                 cout << "E2" << endl;
                 return 0;
             }
-            int num = 1; // Generates a random number with the number of digits entered
-            for (int i = 1; i <= digit; i++)
-            {
-                num = num * 10;
-            }
-            num = num - 1;
             string secret;
-            secret = to_string(rand() % num);
-            while (!checkRandom(secret))
+            do
             {
-                secret = to_string(rand() % num);
-            }
+                secret.clear();
+                for (int i = 0; i < digit; i++)
+                {
+                    if (i == 0)
+                    {
+                        secret += to_string(rand() % 9 + 1); // The first digit can't be 0
+                    }
+                    else
+                    {
+                        secret += to_string(rand() % 10);
+                    }
+                }
+            } while (!checkRandom(secret));
+
             cout << secret;
         }
         else if (strcmp(argv[1], "-u") == 0)
         {
-            string secNum= argv[2];
+            string secNum = argv[2];
             if (!check(secNum))
             {
                 return 0;
