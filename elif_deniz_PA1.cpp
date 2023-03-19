@@ -5,19 +5,26 @@
 #include <ctime>
 
 using namespace std;
-bool isValid(int a)
+bool check(string a)
 {
-
-    if(a>0 && a<10)
+    if (a.empty()) // Check if string is empty
     {
-        return true;
-    }else return false;
+        return false;
+    }
+    for (char c : a)
+    {
+        if (!isdigit(c)) // Check if character is not a digit
+        {
+            return false;
+        }
+    }
+    return true;
 }
+
 
 int main()
 {
     char choise;
-    int secret;
     cout << "Which choise r or u ?" << endl;
     cin >> choise;
     
@@ -29,7 +36,7 @@ int main()
             cout<<"How much digit?"<<endl;
             int digit;
             cin>> digit;
-            if(!isValid(digit))
+            if(!isdigit(digit))
             {
                 cout << "E0" << endl;
                 break;
@@ -40,6 +47,7 @@ int main()
                 num =num*10;
             }
             num = num-1;
+            int secret;
             secret = rand()%num;
             cout << secret ;
             break;
@@ -47,7 +55,12 @@ int main()
         case 'u':
         {
             cout << "enter secret number:"<< endl;
-            cin >> secret;
+            string secNum;
+            cin >> secNum;
+            if(check(secNum))
+            {
+                cout << secNum ; 
+            }
             break;
         }
         default:
