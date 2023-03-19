@@ -6,42 +6,13 @@
 
 using namespace std;
 
-bool isValidDigit(int a)
+bool checkRandom(string a)
 {
-    if (a >= 0 && a <= 9)
+    for (int i = 0; i < a.length(); i++)
     {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-}
-
-bool check(string a)
-{
-    if (a.empty()) // Check if string is empty
-    {
-        return false;
-    }
-    for (char c : a)
-    {
-        if (!isdigit(c)) // Check if character is not a digit
+        for (int j = i + 1; j < a.length(); j++) // Compare each digit with all digits after it
         {
-            return false;
-        }
-
-        int digit = c - '0';
-        if (!isValidDigit(digit)) // Check if digit is in the range of 0 to 9
-        {
-            return false;
-        }
-    }
-    for(int i=0;i<a.length();i++)
-    {
-        for(int j=i+1;j<a.length();j++) // Compare each digit with all digits after it
-        {
-            if(a[i]==a[j]) // If any two digits are the same, return false
+            if (a[i] == a[j]) // If any two digits are the same, return false
             {
                 return false;
             }
@@ -50,53 +21,65 @@ bool check(string a)
     return true;
 }
 
-
-int main()
+bool check(string a)
 {
-    char choise;
-    cout << "Which choice r or u ?" << endl;
-    cin >> choise;
-    
-    srand(time(0));
-    switch(choise)
+    if (a.empty()) // Check if string is empty
     {
-        case 'r':
-        {
-            cout<<"How many digits?"<<endl;
-            int digit;
-            cin>> digit;
-            if(!isValidDigit(digit))
-            {
-                cout << "E0" << endl;
-                break;
-            }
-            int num=1;//Generates a random number with the number of digits entered
-            for(int i=1;i<=digit;i++)
-            {
-                num =num*10;
-            }
-            num = num-1;
-            string secret;
-            secret = to_string(rand()%num);
-            while(!check(secret))
-            {
-                secret = to_string(rand()%num);
-            }
-            cout << secret ;
-            break;
-        }
-        case 'u':
-        {
-            cout << "Enter secret number:"<< endl;
-            string secNum;
-            getline(cin, secNum);
-            if(check(secNum))
-            {
-                cout << secNum ; 
-            }
-            break;
-        }
-        default:
-            break;
+        cout << "E2" << endl;
+        return false;
     }
+    for (char c : a)
+    {
+        if (!isdigit(c)) // Check if character is not a digit
+        {
+            cout << "E2" << endl;
+            return false;
+        }
+    }
+    if (!checkRandom(a))
+    {
+        cout << "E2" << endl;
+        return false;
+    }
+    return true;
+}
+
+int main(int argc, char *argv[])
+{
+    srand(time(0));
+    if (argc == 3)
+    {
+        if (strcmp(argv[1], "-r") == 0)
+        {
+            int digit = atoi(argv[2]);
+            if (digit <= 0 || !isdigit(argv[2][0]) ) // Check if input is less than or equal to 0
+            {
+                cout << "E2" << endl;
+                return 0;
+            }
+            int num = 1; // Generates a random number with the number of digits entered
+            for (int i = 1; i <= digit; i++)
+            {
+                num = num * 10;
+            }
+            num = num - 1;
+            string secret;
+            secret = to_string(rand() % num);
+            while (!checkRandom(secret))
+            {
+                secret = to_string(rand() % num);
+            }
+            cout << secret;
+        }
+        else if (strcmp(argv[1], "-u") == 0)
+        {
+            string secNum= argv[2];
+            if (!check(secNum))
+            {
+                return 0;
+            }
+            cout << secNum;
+        }
+    }
+    return 0;
 }
