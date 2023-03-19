@@ -5,6 +5,19 @@
 #include <ctime>
 
 using namespace std;
+
+bool isValidDigit(int a)
+{
+    if (a >= 0 && a <= 9)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
 bool check(string a)
 {
     if (a.empty()) // Check if string is empty
@@ -17,6 +30,22 @@ bool check(string a)
         {
             return false;
         }
+
+        int digit = c - '0';
+        if (!isValidDigit(digit)) // Check if digit is in the range of 0 to 9
+        {
+            return false;
+        }
+    }
+    for(int i=0;i<a.length();i++)
+    {
+        for(int j=i+1;j<a.length();j++) // Compare each digit with all digits after it
+        {
+            if(a[i]==a[j]) // If any two digits are the same, return false
+            {
+                return false;
+            }
+        }
     }
     return true;
 }
@@ -25,7 +54,7 @@ bool check(string a)
 int main()
 {
     char choise;
-    cout << "Which choise r or u ?" << endl;
+    cout << "Which choice r or u ?" << endl;
     cin >> choise;
     
     srand(time(0));
@@ -33,10 +62,10 @@ int main()
     {
         case 'r':
         {
-            cout<<"How much digit?"<<endl;
+            cout<<"How many digits?"<<endl;
             int digit;
             cin>> digit;
-            if(!isdigit(digit))
+            if(!isValidDigit(digit))
             {
                 cout << "E0" << endl;
                 break;
@@ -47,16 +76,20 @@ int main()
                 num =num*10;
             }
             num = num-1;
-            int secret;
-            secret = rand()%num;
+            string secret;
+            secret = to_string(rand()%num);
+            while(!check(secret))
+            {
+                secret = to_string(rand()%num);
+            }
             cout << secret ;
             break;
         }
         case 'u':
         {
-            cout << "enter secret number:"<< endl;
+            cout << "Enter secret number:"<< endl;
             string secNum;
-            cin >> secNum;
+            getline(cin, secNum);
             if(check(secNum))
             {
                 cout << secNum ; 
