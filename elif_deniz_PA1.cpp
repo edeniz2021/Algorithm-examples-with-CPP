@@ -49,6 +49,7 @@ void game(string secretNum)
     string user;
     int den = 0;
     int count = 0;
+    int bas = 0;
     cout << "User enter:" << endl;
     cin >> user;
     while (user != secretNum && den != 1)
@@ -60,6 +61,7 @@ void game(string secretNum)
         }
         else
         {
+            bas = 0;
             count = 0;
             for (int i = 0; i < secretNum.length(); i++)
             {
@@ -70,8 +72,13 @@ void game(string secretNum)
                         count++;
                     }
                 }
+                if (user[i] == secretNum[i])
+                {
+                    bas++;
+                }
             }
-            cout << "ayni harf sayisi :" << count << endl;
+            cout << "doğru harf sayisi :" << count << endl;
+            cout << "doğru basamak sayisi :" << bas << endl;
             cout << "User enter:" << endl;
             cin >> user;
             den = 0;
