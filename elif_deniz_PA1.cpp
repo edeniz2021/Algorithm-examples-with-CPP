@@ -48,22 +48,33 @@ void game(string secretNum)
 {
     string user;
     int den = 0;
+    int count = 0;
     cout << "User enter:" << endl;
     cin >> user;
-    if (secretNum.length() != user.length())
-    {
-        den = 1;
-        cout << "E1" << endl;
-    }
     while (user != secretNum && den != 1)
     {
-        cout << "User enter:" << endl;
-        cin >> user;
-        den = 0;
         if (secretNum.length() != user.length())
         {
             den = 1;
             cout << "E1" << endl;
+        }
+        else
+        {
+            count = 0;
+            for (int i = 0; i < secretNum.length(); i++)
+            {
+                for (int j = 0; j < user.length(); j++)
+                {
+                    if (user[i] == secretNum[j])
+                    {
+                        count++;
+                    }
+                }
+            }
+            cout << "ayni harf sayisi :" << count << endl;
+            cout << "User enter:" << endl;
+            cin >> user;
+            den = 0;
         }
     }
     if (den == 1)
@@ -102,26 +113,26 @@ int main(int argc, char *argv[])
                 }
             } while (!checkRandom(secret));
 
-            cout << secret<<endl;
+            cout << secret << endl;
             game(secret);
         }
         else if (strcmp(argv[1], "-u") == 0)
         {
-            secret= argv[2];
+            secret = argv[2];
             if (!check(secret))
             {
                 return 0;
             }
-            cout << secret<<endl;
+            cout << secret << endl;
             game(secret);
         }
-        else 
+        else
         {
             cout << "E0" << endl;
             return 0;
         }
     }
-    else 
+    else
     {
         cout << "E0" << endl;
         return 0;
