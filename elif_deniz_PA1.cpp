@@ -44,9 +44,37 @@ bool check(string a)
     }
     return true;
 }
+void game(string secretNum)
+{
+    string user;
+    int den = 0;
+    cout << "User enter:" << endl;
+    cin >> user;
+    if (secretNum.length() != user.length())
+    {
+        den = 1;
+        cout << "E1" << endl;
+    }
+    while (user != secretNum && den != 1)
+    {
+        cout << "User enter:" << endl;
+        cin >> user;
+        den = 0;
+        if (secretNum.length() != user.length())
+        {
+            den = 1;
+            cout << "E1" << endl;
+        }
+    }
+    if (den == 1)
+    {
+        exit(0);
+    }
+}
 
 int main(int argc, char *argv[])
 {
+    string secret;
     srand(time(0));
     if (argc == 3)
     {
@@ -58,7 +86,6 @@ int main(int argc, char *argv[])
                 cout << "E0" << endl;
                 return 0;
             }
-            string secret;
             do
             {
                 secret.clear();
@@ -75,16 +102,18 @@ int main(int argc, char *argv[])
                 }
             } while (!checkRandom(secret));
 
-            cout << secret;
+            cout << secret<<endl;
+            game(secret);
         }
         else if (strcmp(argv[1], "-u") == 0)
         {
-            string secNum = argv[2];
-            if (!check(secNum))
+            secret= argv[2];
+            if (!check(secret))
             {
                 return 0;
             }
-            cout << secNum;
+            cout << secret<<endl;
+            game(secret);
         }
         else 
         {
