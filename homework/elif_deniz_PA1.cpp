@@ -1,16 +1,17 @@
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
+#include <cstring>
 
 using namespace std;
 
 bool checkRandom(char a[]);
-int length_measure(char a[]);
 bool check(char a[]);
 void game(char secretNum[]);
 bool my_isdigit(char c);
 
-bool my_isdigit(char c) {
+bool my_isdigit(char c) // Returns true if the given character is a digit (0-9), false otherwise
+{
     if (c >= '0' && c <= '9') {
         return true;
     }
@@ -19,11 +20,7 @@ bool my_isdigit(char c) {
 
 bool checkRandom(char a[])
 {
-    int len = 0;
-    while (a[len] != '\0')
-    {
-        len++;
-    }
+    int len = strlen(a);
     for (int i = 0; i < len; i++)
     {
         for (int j = i + 1; j < len; j++) // Compare each digit with all digits after it
@@ -36,22 +33,13 @@ bool checkRandom(char a[])
     }
     return true;
 }
-int length_measure(char a[])
-{
-    int len = 0;
-    while (a[len] != '\0')
-    {
-        len++;
-    }
-    return len;
-}
 
 bool check(char a[])
 {
-    int len = length_measure(a);
+    int len = strlen(a);
     if (len == 0) // Check if string is empty
     {
-        cout << "E2" << endl;
+        cout << "E0" << endl;
         return false;
     }
     for (int i = 0; i < len; i++)
@@ -64,29 +52,28 @@ bool check(char a[])
     }
     if (!checkRandom(a))
     {
-        cout << "E2" << endl;
+        cout << "E0" << endl;
         return false;
     }
     return true;
 }
 void game(char secretNum[])
 {
-    char user[100]; // declare a character array to store user input
+    char user[10]; // declare a character array to store user input
     int den = 0;
     int count = 0;
     int bas = 0;
     int gameCount = 0;
-    int len = length_measure(secretNum);
-    cout << "User enter:" << endl;
+    int len = strlen(secretNum);
     cin >> user;
     gameCount++;
     int isEqual = 0;
-    while (isEqual != len && den != 1 && gameCount!=100 && check(user)) 
+    while (isEqual != len && den != 1 && gameCount!=100 && check(user)) // loop until user finds the secret number or game ends
     {
-        int userlen = length_measure(user);
-        gameCount++;
+        int userlen = strlen(user);
+        gameCount++;// increment game attempt count
         isEqual = 0; 
-        if (len != userlen)
+        if (len != userlen)// check if user input length matches secret number length
         {
             den = 1;
             cout << "E1" << endl;
@@ -95,23 +82,21 @@ void game(char secretNum[])
         {
             bas = 0;
             count = 0;
-            for (int i = 0; i < len; i++)
+            for (int i = 0; i < len; i++)// compare user input with secret number
             {
                 for (int j = 0; j < userlen; j++)
                 {
                     if (user[i] == secretNum[j])
                     {
-                        count++;
+                        count++; // increment count if digit is correct
                     }
                 }
-                if (user[i] == secretNum[i])
+                if (user[i] == secretNum[i])// increment bas if digit is in the correct position
                 {
                     bas++;
                 }
             }
-            cout << "doğru harf sayisi :" << count - bas << endl;
-            cout << "doğru basamak sayisi :" << bas << endl;
-            cout << "user enter:";
+            cout << bas << " " << count - bas << endl;// print feedback to the user
             cin >> user;
             den = 0;
             for (int i = 0; i < len; i++) // two array compare for loop
@@ -122,7 +107,7 @@ void game(char secretNum[])
                 }
             }
         }
-    }
+    }// print outcome of the game
     if (isEqual == len)
     {
         cout << "FOUND " << gameCount << endl;
@@ -177,17 +162,8 @@ int main(int argc, char *argv[])
             {
                 return 0;
             }
-            int len = 0;
-            while (argv[2][len] != '\0')
-            {
-                len++;
-            }
-            for (int i = 0; i < len; i++)
-            {
-                secret[i] = argv[2][i];
-            }
-            secret[len] = '\0'; // Add null character to end array
-
+            int len = strlen(argv[2]);
+            strcpy(secret, argv[2]);
             cout << secret << endl;
             game(secret);
         }
