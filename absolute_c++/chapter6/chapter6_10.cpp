@@ -5,7 +5,7 @@ Kelvin = Celsius + 273.15
 Celsius = (5.0/9) * (Fahrenheit - 32)*/
 #include <iostream>
 #include <cmath>
-
+using namespace std;
 class Temperature
 {
     public:
@@ -21,9 +21,53 @@ class Temperature
     double degree;
 
 };
-
+Temperature::Temperature()
+{
+    degree = 0.0;
+}
+void Temperature::setTempKelvin(double temp)
+{
+    degree = temp;
+}
+void Temperature::setTempCelsius(double temp)
+{
+   degree = temp + 273.15;
+}
+void Temperature::setTempFahrenheit(double temp)
+{
+     degree = (5.0/9) * (temp -32)+273.15;
+}
+double Temperature::getTempKelvin()const
+{
+    return degree;
+}
+double Temperature::getTempCelsius()const
+{
+    return degree - 273.15;;
+}
+double Temperature::getTempFahrenheit()const
+{
+    return  (degree - 273.15)* (9/5.0)+32;
+}
 int main()
 {
+    Temperature temp;
+
+    temp.setTempKelvin(300);
+    cout << "Temperature in Kelvin: " << temp.getTempKelvin() << endl;
+    cout << "Temperature in Celsius: " << temp.getTempCelsius() << endl;
+    cout << "Temperature in Fahrenheit: " << temp.getTempFahrenheit() << endl;
+
+    temp.setTempFahrenheit(68);
+    cout << "Temperature in Kelvin: " << temp.getTempKelvin() << endl;
+    cout << "Temperature in Celsius: " << temp.getTempCelsius() << endl;
+    cout << "Temperature in Fahrenheit: " << temp.getTempFahrenheit() << endl;
+
+    temp.setTempCelsius(25);
+    cout << "Temperature in Kelvin: " << temp.getTempKelvin() << endl;
+    cout << "Temperature in Celsius: " << temp.getTempCelsius() << endl;
+    cout << "Temperature in Fahrenheit: " << temp.getTempFahrenheit() << endl;
+
     return 0;
 }
 
