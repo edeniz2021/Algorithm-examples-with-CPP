@@ -49,7 +49,7 @@ Posta::Posta(int num)
 void Posta::calBarCod(string kod)
 {
     barCod = "0000000000000000000000000";
-    for (int i = 1; i < 26; i++)
+    for (int i = 1; i < 26; i++) // Copy the 25 digits of the input string to barCod
     {
         barCod[i - 1] = kod[i];
     }
@@ -58,18 +58,18 @@ void Posta::calBarCod(string kod)
     int sum = 0;
     int deger[5] = {0};
     int i = -1;
-    while (totalCount != 25)
+    while (totalCount != 25) // Divide the 25 digits of barCod into groups of 5, and calculate the sum of each group
     {
         count = 0;
         sum = 0;
-        while (count != 5)
+        while (count != 5) // Sum the products of each digit and its corresponding value in the value array
         {
             sum += (barCod[totalCount] - '0') * value[count];
             totalCount++;
             count++;
         }
         i++;
-        deger[i] = sum;
+        deger[i] = sum; // Store the sum of the group in the deger
     }
     cout << "Barkod " << kod << "convert to  ";
     for (int j = 0; j < 5; j++)
@@ -81,10 +81,14 @@ void Posta::calBarCod(string kod)
 void Posta::calCodBar(int number)
 {
     int N = number;
+    // Calculate the barcode digits for each digit of the given number.
     for (int i = 0; i < 5; i++)
     {
+        // Get the last digit of the number.
         int son_basamak = number % 10;
+        // Remove the last digit from the number.
         number = number / 10;
+        // Add the corresponding barcode digits for the last digit.
         switch (son_basamak)
         {
         case 0:
@@ -121,15 +125,18 @@ void Posta::calCodBar(int number)
             break;
         }
     }
+    // Reverse the barcode digits.
     int n = barCod.size();
     for (int i = 0; i < n / 2; i++)
     {
         swap(barCod[i], barCod[n - i - 1]);
     }
-    // Add the start and stop digits.
+    // Add the start and stop digits to the barcode.
     barCod = "1" + barCod + "1";
-    cout << "Number " << N << " convert to " << barCod << " barkod" << endl;
+    // Print the converted barcode.
+    cout << "Number " << N << " converted to barcode " << barCod << endl;
 }
+
 int main()
 {
     Posta p("110100101000101011000010011");
