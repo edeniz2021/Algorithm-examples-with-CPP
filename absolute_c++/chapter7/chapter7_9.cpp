@@ -23,32 +23,115 @@ class Posta
 {
 public:
     Posta();
+    Posta(string kod);
+    Posta(int number);
     void calBarCod(string kod);
-    void calCodBar();
+    void calCodBar(int number);
 
 private:
     string barCod;
-    int value[5];
+    int value[5] = {0, 1, 2, 4, 7};
 };
 Posta::Posta()
 {
     barCod = "";
-    value[5] = {7, 4, 2, 1, 0};
 }
-
+Posta::Posta(string kod)
+{
+    barCod = "0000000000000000000000000";
+    calBarCod(kod);
+}
+Posta::Posta(int num)
+{
+    barCod = "";
+    calCodBar(num);
+}
 void Posta::calBarCod(string kod)
 {
-    for (int i = 0; i < 27; i++)
+    barCod = "0000000000000000000000000";
+    for (int i = 1; i < 26; i++)
     {
-        for (int j = 0; j < 25; j++)
+        barCod[i - 1] = kod[i];
+    }
+    int totalCount = 0;
+    int count = 0;
+    int sum = 0;
+    int deger[5] = {0};
+    int i = -1;
+    while (totalCount != 25)
+    {
+        count = 0;
+        sum = 0;
+        while (count != 5)
         {
-            if(i!=0 || i!=26)
-            {
-            barCod[j]= kod[i];
-            }
+            sum += (barCod[totalCount] - '0') * value[count];
+            totalCount++;
+            count++;
+        }
+        i++;
+        deger[i] = sum;
+    }
+    cout << "Barkod " << kod << "convert to  ";
+    for (int j = 0; j < 5; j++)
+    {
+        cout << deger[j];
+    }
+    cout << " number" << endl;
+}
+void Posta::calCodBar(int number)
+{
+    int N = number;
+    for (int i = 0; i < 5; i++)
+    {
+        int son_basamak = number % 10;
+        number = number / 10;
+        switch (son_basamak)
+        {
+        case 0:
+            barCod += "00001";
+            break;
+        case 1:
+            barCod += "00010";
+            break;
+        case 2:
+            barCod += "00101";
+            break;
+        case 3:
+            barCod += "00110";
+            break;
+        case 4:
+            barCod += "01000";
+            break;
+        case 5:
+            barCod += "01010";
+            break;
+        case 6:
+            barCod += "01100";
+            break;
+        case 7:
+            barCod += "10001";
+            break;
+        case 8:
+            barCod += "10010";
+            break;
+        case 9:
+            barCod += "10100";
+            break;
+        default:
+            break;
         }
     }
+    int n = barCod.size();
+    for (int i = 0; i < n / 2; i++)
+    {
+        swap(barCod[i], barCod[n - i - 1]);
+    }
+    // Add the start and stop digits.
+    barCod = "1" + barCod + "1";
+    cout << "Number " << N << " convert to " << barCod << " barkod" << endl;
 }
 int main()
 {
+    Posta p("110100101000101011000010011");
+    Posta pstl(22518);
 }
