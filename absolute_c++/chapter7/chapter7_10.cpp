@@ -56,20 +56,25 @@ void BoxOfProduce::printBox() const
 }
 void BoxOfProduce::addRecipe()
 {
-    int count = 0;
+
     for (int i = 0; i < 3; i++)
     {
-        if (box[i] == "Tomatillo" && recipe_flyr > 0 && count == 0)
+        for (int j = 0; j < 3; j++)
         {
-            box[i] = "Tomatillo (salsa verde recipe)";
-            recipe_flyr--;
-            count++;
+            if (i != j)
+            {
+                if (box[i] == "Tomatillo" && recipe_flyr > 0  && (box[j] != "Tomatillo (salsa verde recipe)"))
+                {
+                    box[i] = "Tomatillo (salsa verde recipe)";
+                    recipe_flyr--;
+                }
+            }
         }
-    }
-    if (recipe_flyr == 0)
-    {
-        cout << "All recipe finish" << endl;
-        exit(0);
+        if (recipe_flyr == 0)
+        {
+            cout << "All recipe finish" << endl;
+            exit(0);
+        }
     }
 }
 void BoxOfProduce::readFile()

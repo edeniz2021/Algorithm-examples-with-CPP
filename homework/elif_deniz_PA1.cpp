@@ -9,10 +9,25 @@ bool checkRandom(char a[]);
 bool check(char a[]);
 void game(char secretNum[]);
 bool my_isdigit(char c);
+bool negatifCheck(char a[]);
+
+bool negatifCheck(char a[])
+{
+    int number;
+    number = stoi(a);
+    if (number < 0) // Check if input is less than or equal to 0
+    {
+        cout << "E0" << endl;
+        return false;
+    }
+    else
+        return true;
+}
 
 bool my_isdigit(char c) // Returns true if the given character is a digit (0-9), false otherwise
 {
-    if (c >= '0' && c <= '9') {
+    if (c >= '0' && c <= '9')
+    {
         return true;
     }
     return false;
@@ -42,6 +57,10 @@ bool check(char a[])
         cout << "E0" << endl;
         return false;
     }
+    if (!negatifCheck(a))
+    {
+        return 0;
+    }
     for (int i = 0; i < len; i++)
     {
         if (!my_isdigit(a[i])) // Check if character is not a digit
@@ -68,12 +87,12 @@ void game(char secretNum[])
     cin >> user;
     gameCount++;
     int isEqual = 0;
-    while (isEqual != len && den != 1 && gameCount!=100 && check(user)) // loop until user finds the secret number or game ends
+    while (isEqual != len && den != 1 && gameCount != 100 && check(user)) // loop until user finds the secret number or game ends
     {
         int userlen = strlen(user);
-        gameCount++;// increment game attempt count
-        isEqual = 0; 
-        if (len != userlen)// check if user input length matches secret number length
+        gameCount++; // increment game attempt count
+        isEqual = 0;
+        if (len != userlen) // check if user input length matches secret number length
         {
             den = 1;
             cout << "E1" << endl;
@@ -82,7 +101,7 @@ void game(char secretNum[])
         {
             bas = 0;
             count = 0;
-            for (int i = 0; i < len; i++)// compare user input with secret number
+            for (int i = 0; i < len; i++) // compare user input with secret number
             {
                 for (int j = 0; j < userlen; j++)
                 {
@@ -91,12 +110,12 @@ void game(char secretNum[])
                         count++; // increment count if digit is correct
                     }
                 }
-                if (user[i] == secretNum[i])// increment bas if digit is in the correct position
+                if (user[i] == secretNum[i]) // increment bas if digit is in the correct position
                 {
                     bas++;
                 }
             }
-            cout << bas << " " << count - bas << endl;// print feedback to the user
+            cout << bas << " " << count - bas << endl; // print feedback to the user
             cin >> user;
             den = 0;
             for (int i = 0; i < len; i++) // two array compare for loop
@@ -107,14 +126,14 @@ void game(char secretNum[])
                 }
             }
         }
-    }// print outcome of the game
+    } // print outcome of the game
     if (isEqual == len)
     {
         cout << "FOUND " << gameCount << endl;
     }
     if (gameCount == 100)
     {
-        cout << "FAILED "  << endl;
+        cout << "FAILED " << endl;
     }
     if (den == 1)
     {
@@ -138,7 +157,6 @@ int main(int argc, char *argv[])
             char secret[digit];
             do
             {
-
                 for (int i = 0; i < digit; i++)
                 {
                     if (i == 0)
@@ -151,20 +169,24 @@ int main(int argc, char *argv[])
                     }
                 }
             } while (!checkRandom(secret));
-
-            cout << secret << endl;
             game(secret);
         }
         else if (strcmp(argv[1], "-u") == 0)
         {
             char secret[10];
-            if (!check(argv[2]))
-            {
-                return 0;
-            }
-            int len = strlen(argv[2]);
             strcpy(secret, argv[2]);
-            cout << secret << endl;
+            for (int i = 0; i < strlen(argv[2]); i++)
+            {
+                if (!my_isdigit(argv[2][i]))
+                {
+                    cout << "E0" << endl;
+                    return 0;
+                }else if(!checkRandom(secret))
+                {
+                    cout << "E0" << endl;
+                    return 0;
+                }
+            }
             game(secret);
         }
         else
