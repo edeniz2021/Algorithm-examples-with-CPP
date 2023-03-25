@@ -57,7 +57,7 @@ bool check(char a[])
         cout << "E0" << endl;
         return false;
     }
-    if (!negatifCheck(a))
+    if (!negatifCheck(a))// Check if string is not negative digit
     {
         return 0;
     }
@@ -80,9 +80,9 @@ void game(char secretNum[])
 {
     char user[10]; // declare a character array to store user input
     int den = 0;
-    int count = 0;
+    int count = 0; // correct digit keeps correct digits
     int bas = 0;
-    int gameCount = 0;
+    int gameCount = 0; // keeps track of how many times the game has been played
     int len = strlen(secretNum);
     cin >> user;
     gameCount++;
@@ -154,6 +154,11 @@ int main(int argc, char *argv[])
                 cout << "E0" << endl;
                 return 0;
             }
+            else if (digit > 9)//Controls entering a value greater than 9
+            {
+                cout << "E0" << endl;
+                return 0;
+            }
             char secret[digit];
             do
             {
@@ -181,7 +186,8 @@ int main(int argc, char *argv[])
                 {
                     cout << "E0" << endl;
                     return 0;
-                }else if(!checkRandom(secret))
+                }
+                else if (!checkRandom(secret))
                 {
                     cout << "E0" << endl;
                     return 0;
