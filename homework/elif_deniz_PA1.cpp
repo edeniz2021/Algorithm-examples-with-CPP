@@ -7,7 +7,7 @@ using namespace std;
 
 bool checkRandom(char a[]);
 bool check(char a[]);
-void game(char secretNum[]);
+void game(char secretNum[],int len);
 bool my_isdigit(char c);
 bool negatifCheck(char a[]);
 
@@ -76,14 +76,13 @@ bool check(char a[])
     }
     return true;
 }
-void game(char secretNum[])
+void game(char secretNum[],int len)
 {
     char user[10]; // declare a character array to store user input
     int den = 0;
     int count = 0; // correct digit keeps correct digits
     int bas = 0;
     int gameCount = 0; // keeps track of how many times the game has been played
-    int len = strlen(secretNum);
     cin >> user;
     gameCount++;
     int isEqual = 0;
@@ -174,11 +173,12 @@ int main(int argc, char *argv[])
                     }
                 }
             } while (!checkRandom(secret));
-            game(secret);
+            game(secret,digit);
         }
         else if (strcmp(argv[1], "-u") == 0)
         {
             char secret[10];
+            int len = strlen(argv[2]);
             strcpy(secret, argv[2]);
             for (int i = 0; i < strlen(argv[2]); i++)
             {
@@ -193,7 +193,7 @@ int main(int argc, char *argv[])
                     return 0;
                 }
             }
-            game(secret);
+            game(secret,len);
         }
         else
         {
