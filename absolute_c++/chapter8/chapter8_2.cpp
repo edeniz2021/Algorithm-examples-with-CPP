@@ -27,6 +27,9 @@ public:
     Rational operator-(const Rational &R);
     Rational operator*(const Rational &R);
     Rational operator/(const Rational &R);
+    bool operator<=(const Rational &R) const;
+    bool operator>=(const Rational &R) const;
+    bool operator>(const Rational &R) const;
     bool operator<(const Rational &R) const;
     bool operator==(const Rational &R) const;
     void normalize();
@@ -47,6 +50,7 @@ Rational::Rational(int n, int d)
 {
     numerator = n;
     denominator = d;
+    normalize();
 }
 
 void Rational::setDenominator(int d)
@@ -74,14 +78,16 @@ Rational Rational::operator+(const Rational &R)
     Rational sum;
     sum.numerator = R.getNumerator() * denominator + numerator * R.getDenominator();
     sum.denominator = R.getDenominator() * denominator;
+    sum.normalize();
     return sum;
 }
 
 Rational Rational::operator-(const Rational &R)
 {
     Rational diff;
-    diff.numerator = R.getNumerator() * denominator - numerator * R.getDenominator();
+    diff.numerator = numerator * R.getDenominator() - R.getNumerator() * denominator;
     diff.denominator = R.getDenominator() * denominator;
+    diff.normalize();
     return diff;
 }
 
@@ -90,6 +96,7 @@ Rational Rational::operator*(const Rational &R)
     Rational prod;
     prod.numerator = R.getNumerator() * numerator;
     prod.denominator = R.getDenominator() * denominator;
+    prod.normalize();
     return prod;
 }
 
@@ -98,28 +105,71 @@ Rational Rational::operator/(const Rational &R)
     Rational quot;
     quot.numerator = R.getDenominator() * numerator;
     quot.denominator = R.getNumerator() * denominator;
+    quot.normalize();
     return quot;
 }
 
+bool Rational::operator<=(const Rational &R) const
+{
+    return numerator * R.getDenominator() <= R.getNumerator() * denominator;
+}
 bool Rational::operator<(const Rational &R) const
 {
     return numerator * R.getDenominator() < R.getNumerator() * denominator;
 }
-
 bool Rational::operator==(const Rational &R) const
 {
     return numerator * R.getDenominator() == R.getNumerator() * denominator;
 }
 
+bool Rational::operator>=(const Rational &R) const
+{
+    return numerator * R.getDenominator() >= R.getNumerator() * denominator;
+}
+bool Rational::operator>(const Rational &R) const
+{
+    return numerator * R.getDenominator() > R.getNumerator() * denominator;
+}
 ostream &operator<<(ostream &outputStream, const Rational &R)
 {
     outputStream << R.getNumerator() << "/" << R.getDenominator();
     return outputStream;
 }
+void Rational::normalize()
+{
+    int num = getNumerator();
+    int den = getDenominator();
+    int min = (num < den) ? num : den;
+    if (num== 0)
+    {
+        // Zero denominator is undefined
+        // set denominator to 1 and numerator to 0
+        num = 0;
+        den = 1;
+    }
+    if (den < 0)
+    {
+        den = -den;
+        num = -num;
+    }
+    for (int i = 1; i <= min; i++)
+    {
+        if (num % i == 0 && den % i == 0)
+        {
+            num = num / i;
+            den = den / i;
+            i = 1;
+            min = (num < den) ? num : den;
+        }
+    }
+    setNumerator(num);
+    setDenominator(den);
+}
+
 int main()
 {
-    Rational R(1, 2);
-    Rational S(1, 1);
+    Rational R(4, 8);
+    Rational S(1, 2);
     Rational result;
     result = R + S;
     cout << R << " + " << S << " = " << result << endl;
@@ -129,4 +179,14 @@ int main()
     cout << R << " * " << S << " = " << result << endl;
     result = R / S;
     cout << R << " / " << S << " = " << result << endl;
+    if (R < S)
+    {
+        cout << R << " < " << S << endl;
+    }
+    else if (S < R)
+    {
+        cout << S << " < " << R << endl;
+    }
+    else
+        cout << S << " = " << R << endl;
 }
