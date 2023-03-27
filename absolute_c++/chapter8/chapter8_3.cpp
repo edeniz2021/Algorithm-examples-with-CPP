@@ -42,3 +42,46 @@ private:
     double imaginary;
 };
 const Complex i(0, 1);
+Complex::Complex()
+{
+    real = 0;
+    imaginary = 0;
+}
+Complex::Complex(double r, double i)
+{
+    real = r;
+    imaginary = i;
+}
+Complex Complex::operator+(const Complex &C)
+{
+    Complex sum;
+    sum.real = C.getReal() + getReal();
+    sum.imaginary = C.getImagine() + getImagine();
+    return sum;
+}
+Complex Complex::operator-(const Complex &C)
+{
+    Complex diff;
+    diff.real = C.getReal() - getReal();
+    diff.imaginary = C.getImagine() - getImagine();
+    return diff;
+}
+// (a+b*i) * (c+d*i) == (a*c - b*d) + (a*d + b*c)*i
+Complex Complex::operator*(const Complex &C)
+{
+    Complex mul;
+    mul.real = getReal() * C.getReal() - getImagine() * C.getImagine();
+    mul.imaginary = getReal() * C.getImagine() - getImagine() * C.getReal();
+    return mul;
+}
+bool Complex::operator==(const Complex &C)
+{
+    return (getReal() == C.getReal() && getImagine() == C.getImagine());
+}
+ostream &operator<<(ostream &outputStream, const Complex &C)
+{
+    
+}
+istream &operator>>(istream &inputStream, Complex &C)
+{
+}
