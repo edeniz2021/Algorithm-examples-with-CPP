@@ -34,6 +34,8 @@ public:
     bool operator==(const Complex &C);
     double getReal() const { return real; }
     double getImagine() const { return imaginary; }
+    void setReal(double r) { real = r; }
+    void setImagine(double i) { imaginary = i; }
     friend ostream &operator<<(ostream &outputStream, const Complex &C);
     friend istream &operator<<(istream &inputStream, Complex &C);
 
@@ -62,8 +64,8 @@ Complex Complex::operator+(const Complex &C)
 Complex Complex::operator-(const Complex &C)
 {
     Complex diff;
-    diff.real = C.getReal() - getReal();
-    diff.imaginary = C.getImagine() - getImagine();
+    diff.real = getReal() - C.getReal();
+    diff.imaginary = getImagine() - C.getImagine();
     return diff;
 }
 // (a+b*i) * (c+d*i) == (a*c - b*d) + (a*d + b*c)*i
@@ -71,7 +73,7 @@ Complex Complex::operator*(const Complex &C)
 {
     Complex mul;
     mul.real = getReal() * C.getReal() - getImagine() * C.getImagine();
-    mul.imaginary = getReal() * C.getImagine() - getImagine() * C.getReal();
+    mul.imaginary = getReal() * C.getImagine() + getImagine() * C.getReal();
     return mul;
 }
 bool Complex::operator==(const Complex &C)
@@ -80,8 +82,56 @@ bool Complex::operator==(const Complex &C)
 }
 ostream &operator<<(ostream &outputStream, const Complex &C)
 {
-    
+    outputStream << "(" << C.getReal() << " + " << C.getImagine() << "i"
+                 << ")";
+    return outputStream;
 }
 istream &operator>>(istream &inputStream, Complex &C)
 {
+    double x;
+    inputStream >> x;
+    C.setReal(x);
+    inputStream >> x;
+    C.setImagine(x);
+    return inputStream;
+}
+int main()
+{
+    cout << "*******************TEST********************" << endl;
+    Complex c(1, 2);
+    Complex c1(1, 2);
+    Complex result;
+    result = c1 + c;
+    cout << "1." << c1 << endl;
+    cout << "2." << c << endl;
+    cout << c1 << " + " << c << " = " << result << endl;
+    result = c1 - c;
+    cout << c1 << " - " << c << " = " << result << endl;
+    result = c1 * c;
+    cout << c1 << " * " << c << " = " << result << endl;
+    if (c1 == c)
+    {
+        cout << "The entered values are equal to each other." << endl;
+    }
+    else
+    {
+        cout << "The entered values are not equal to each other." << endl;
+    }
+    cout << "*******************************************" << endl;
+    char choise = 'y';
+    Complex c2, c3, c4;
+    while (choise == 'y')
+    {
+        cout << "Enter first complex number: ";
+        cin >> c2;
+        cout << "Enter second complex number: ";
+        cin >> c3;
+        cout << c2 << " + " << c3 << " = " << c4 << endl;
+        c4 = c2 - c3;
+        cout << c2 << " - " << c3 << " = " << c4 << endl;
+        c4 = c2 * c3;
+        cout << c2 << " * " << c3 << " = " << c4 << endl;
+        cout << "Did you want to contunie? y or n: ";
+        cin>>choise;
+    }
 }
