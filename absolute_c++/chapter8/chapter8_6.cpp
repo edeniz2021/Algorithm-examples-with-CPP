@@ -29,7 +29,6 @@ MyInteger::MyInteger()
 void MyInteger::setInteger(int num)
 {
     integer = num;
-    reverseInteger();
     while (num > 0)
     {
         int digit = num % 10;
