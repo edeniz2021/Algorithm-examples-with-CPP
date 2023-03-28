@@ -14,7 +14,6 @@ public:
     int &operator[](int index);
     int getSize() const { return size; }
     int getInteger() const { return integer; }
-    void reverseInteger();
 
 private:
     int size;
@@ -26,9 +25,6 @@ MyInteger::MyInteger()
 {
     integer = 0;
     size = 0;
-}
-void MyInteger::reverseInteger()
-{
 }
 void MyInteger::setInteger(int num)
 {
