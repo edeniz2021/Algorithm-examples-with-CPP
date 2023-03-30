@@ -18,12 +18,16 @@ public:
     int getPix() const { return pix; }
 
 private:
-    string format;
     int width, heigth, pix;
-    vector<vector<int> > pixel;
+    vector<vector<int>> pixel;
+    string format;
 };
 Image::Image()
 {
+    width = 0;
+    heigth = 0;
+    pix = 0;
+    format = "";
 }
 void Image::Menu()
 {
@@ -88,37 +92,34 @@ void Image::Menu()
         }
     }
 }
+
 void Image::openImage()
 {
     const int pixelDigit = 3;
     string fileName;
     cin >> fileName;
     int x;
-    ifstream file(fileName);
+    ifstream file(fileName);// read image data from a file and store it in the pixel matrix
     if (file.is_open())
     {
-        getline(file, format);
+        file >> format;
         file >> width >> heigth >> pix;
-        pixel.resize(heigth, vector<int>(width * pixelDigit));
+        pixel.resize(heigth, vector<int>(width * pixelDigit));// the pixel matrix is resized to match the width and height of the image
         for (int i = 0; i < heigth; i++)
         {
             for (int j = 0; j < width * pixelDigit; j++)
             {
                 if ((file >> x))
                 {
-                    pixel[i][j] = x;
+                    pixel[i][j] = x;// the pixel values are stored in row-major order in the matrix
                 }
-                else
-                    cout << "****";
             }
         }
-
         file.close();
     }
     else
         cout << "File is not read!" << endl;
 }
-
 void Image::saveImage()
 {
     const int pixelDigit = 3;
@@ -127,24 +128,28 @@ void Image::saveImage()
     ofstream file(fileName);
     if (file.is_open())
     {
+        // write image format (e.g. P3)
         file << format << endl;
-        file << getWidth() << " " << getHeigth() << endl;
-        file << getPix() << endl;
-        for (int i = 0; i < heigth; i++)
+        // write image dimensions
+        file << width << " " << heigth << endl;
+        // write max pixel value
+        file << pix << endl;
+        for (int i = 0; i < heigth; i++)// write pixel values in row-major order, separated by spaces
         {
-            for (int j = 0; j < width * 3; j++)
+            for (int j = 0; j < width * pixelDigit; j++)// write pixel values in row-major order, separated by spaces,
             {
                 file << pixel[i][j];
-                if (j + 1 != width * 3)
+                if (j + 1 != width * pixelDigit)
                 {
-                    file << " ";
+                    file << " ";        
                 }
             }
-            if (i + 1 != heigth)
+            if (i + 1 != heigth)        // and start a new line after writing each row of pixels except for the last row
             {
-                file << endl;
+                file << endl;        
             }
         }
+
         file.close();
     }
     else
@@ -163,7 +168,6 @@ void Image::scriptImage()
             check = false;
         }
     }
-
     for (int i = 0; i < getHeigth(); i++)
     {
         for (int j = 0; j < getWidth() * 3; j += 3)
@@ -172,10 +176,10 @@ void Image::scriptImage()
             int GREEN = pixel[i][j + 1];
             int BLUE = pixel[i][j + 2];
 
-            int gray = c_r * RED + c_g * GREEN + c_b * BLUE;
-            if (gray > 255)
+            int gray = (c_r * RED) + (c_g * GREEN) + (c_b * BLUE);  // convert each pixel to grayscale using the specified color weights
+            if (gray > pix)
             {
-                gray = 255;
+                gray = 255;  // if the resulting grayscale value is greater than a threshold value "pix",set the pixel color to white (255, 255, 255)
             }
             pixel[i][j] = gray;
             pixel[i][j + 1] = gray;
