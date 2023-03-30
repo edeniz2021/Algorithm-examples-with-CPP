@@ -10,16 +10,16 @@ class Image
 public:
     Image();
     void Menu();
-    void openImage();
-    void saveImage();
-    void scriptImage();
+    void openImage();//to read the file
+    void saveImage();//to write the file
+    void scriptImage();//to make grayscale
     int getWidth() const { return width; }
     int getHeigth() const { return heigth; }
     int getPix() const { return pix; }
 
 private:
     int width, heigth, pix;
-    vector<vector<int> > pixel;
+    vector<vector<int> > pixel;//keeps pixel data
     string format;
 };
 Image::Image()
@@ -41,7 +41,7 @@ void Image::Menu()
         cout << "2 - Save Image Data(D)" << endl;
         cout << "3 - Scripts(D)" << endl;
         cin >> button;
-        if (button == 1)
+        if (button == 1)//If it chooses 1, it will go to the menu again
         {
             buttonTwo = 1;
             while (buttonTwo != 0)
