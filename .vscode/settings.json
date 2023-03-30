@@ -5,6 +5,7 @@
         "cstdlib": "cpp",
         "cstring": "cpp",
         "ostream": "cpp",
-        "__locale": "cpp"
+        "__locale": "cpp",
+        "fstream": "cpp"
     }
 }
