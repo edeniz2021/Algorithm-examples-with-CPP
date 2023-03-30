@@ -18,13 +18,12 @@ public:
     int getPix() const { return pix; }
 
 private:
-    string filename, format;
+    string format;
     int width, heigth, pix;
     vector<vector<int> > pixel;
 };
 Image::Image()
 {
-    filename = "";
 }
 void Image::Menu()
 {
@@ -92,63 +91,97 @@ void Image::Menu()
 void Image::openImage()
 {
     const int pixelDigit = 3;
-    string inputName;
-    cin >> inputName;
-    ifstream file(inputName);
+    string fileName;
+    cin >> fileName;
+    int x;
+    ifstream file(fileName);
     if (file.is_open())
     {
         getline(file, format);
         file >> width >> heigth >> pix;
-        for (int i = 0; i < heigth; i++)
-        {
-            pixel.push_back(vector<int>());
-            for (int j = 0; j < width * pixelDigit; j++)
-            {
-                pixel[i].push_back(0);
-            }
-        }
+        pixel.resize(heigth, vector<int>(width * pixelDigit));
         for (int i = 0; i < heigth; i++)
         {
             for (int j = 0; j < width * pixelDigit; j++)
             {
-                int x;
-                if (file.good())
+                if ((file >> x))
                 {
-                    file >> x;
                     pixel[i][j] = x;
                 }
+                else
+                    cout << "****";
             }
         }
+
         file.close();
     }
-    else cout << "File is not read!" << endl;
+    else
+        cout << "File is not read!" << endl;
 }
 
 void Image::saveImage()
 {
-    string inputfile;
-    cin >> inputfile;
-    ofstream file(inputfile);
+    const int pixelDigit = 3;
+    string fileName;
+    cin >> fileName;
+    ofstream file(fileName);
     if (file.is_open())
     {
         file << format << endl;
         file << getWidth() << " " << getHeigth() << endl;
         file << getPix() << endl;
-        for (int i = 0; i < getWidth(); i++)
+        for (int i = 0; i < heigth; i++)
         {
-            for (int j = 0; j < getHeigth() * 3; j++)
+            for (int j = 0; j < width * 3; j++)
             {
-                file << pixel[i][j] << " ";
+                file << pixel[i][j];
+                if (j + 1 != width * 3)
+                {
+                    file << " ";
+                }
             }
-            file << endl;
+            if (i + 1 != heigth)
+            {
+                file << endl;
+            }
         }
         file.close();
     }
     else
         cout << "Not write txt!" << endl;
 }
+
 void Image::scriptImage()
 {
+    double c_r, c_g, c_b;
+    bool check = true;
+    while (check)
+    {
+        cin >> c_r >> c_g >> c_b;
+        if (c_r > 0 && c_r <= 1 && c_g > 0 && c_g <= 1 && c_b > 0 && c_b <= 1)
+        {
+            check = false;
+        }
+    }
+
+    for (int i = 0; i < getHeigth(); i++)
+    {
+        for (int j = 0; j < getWidth() * 3; j += 3)
+        {
+            int RED = pixel[i][j];
+            int GREEN = pixel[i][j + 1];
+            int BLUE = pixel[i][j + 2];
+
+            int gray = c_r * RED + c_g * GREEN + c_b * BLUE;
+            if (gray > 255)
+            {
+                gray = 255;
+            }
+            pixel[i][j] = gray;
+            pixel[i][j + 1] = gray;
+            pixel[i][j + 2] = gray;
+        }
+    }
 }
 int main()
 {
