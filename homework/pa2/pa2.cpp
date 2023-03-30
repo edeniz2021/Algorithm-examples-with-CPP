@@ -19,7 +19,7 @@ public:
 
 private:
     int width, heigth, pix;
-    vector<vector<int>> pixel;
+    vector<vector<int> > pixel;
     string format;
 };
 Image::Image()
@@ -131,20 +131,20 @@ void Image::saveImage()
         // write image format (e.g. P3)
         file << format << endl;
         // write image dimensions
-        file << width << " " << heigth << endl;
+        file << getWidth() << " " << getHeigth() << endl;
         // write max pixel value
         file << pix << endl;
-        for (int i = 0; i < heigth; i++)// write pixel values in row-major order, separated by spaces
+        for (int i = 0; i < getHeigth(); i++)// write pixel values in row-major order, separated by spaces
         {
-            for (int j = 0; j < width * pixelDigit; j++)// write pixel values in row-major order, separated by spaces,
+            for (int j = 0; j < getWidth() * pixelDigit; j++)// write pixel values in row-major order, separated by spaces,
             {
                 file << pixel[i][j];
-                if (j + 1 != width * pixelDigit)
+                if (j + 1 != getWidth() * pixelDigit)
                 {
                     file << " ";        
                 }
             }
-            if (i + 1 != heigth)        // and start a new line after writing each row of pixels except for the last row
+            if (i + 1 != getHeigth())        // and start a new line after writing each row of pixels except for the last row
             {
                 file << endl;        
             }
