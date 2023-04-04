@@ -95,7 +95,7 @@ void Image::Menu()
 
 void Image::openImage()
 {
-    const int pixelDigit = 3;
+    const int pixelDigit = 3;// r,g,b
     string fileName;
     cin >> fileName;
     int x;
@@ -122,7 +122,7 @@ void Image::openImage()
 }
 void Image::saveImage()
 {
-    const int pixelDigit = 3;
+    const int pixelDigit = 3;//r,g,b
     string fileName;
     cin >> fileName;
     ofstream file(fileName);
@@ -163,10 +163,10 @@ void Image::scriptImage()
     while (check)
     {
         cin >> c_r >> c_g >> c_b;
-        if (c_r > 0 && c_r <= 1 && c_g > 0 && c_g <= 1 && c_b > 0 && c_b <= 1)
+        if (c_r > 0 && c_r <= 1 && c_g > 0 && c_g <= 1 && c_b > 0 && c_b <= 1)// check the  number to 0-1 arrange
         {
             check = false;
-        }
+        }else cout << "Please enter number range [0,1]: ";
     }
     for (int i = 0; i < getHeigth(); i++)
     {

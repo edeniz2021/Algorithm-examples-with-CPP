@@ -62,7 +62,7 @@ PrimeNumber& PrimeNumber::operator--()//postfix decrement
     return (*this);
 }
 
-PrimeNumber PrimeNumber::operator--(int)//postfix increment
+PrimeNumber PrimeNumber::operator--(int)//prefix decrement
 {
     PrimeNumber temp(*this);
     prime--;
