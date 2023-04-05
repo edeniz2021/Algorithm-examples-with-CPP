@@ -18,19 +18,31 @@ If you are using C-strings, assume that each name is at most 20 characters long.
 #include <cctype>
 
 using namespace std;
+
 int main()
 {
     string first, middle, initial = "";
+
+    // Read the first and middle names from input
     cin >> first >> middle;
+
+    // Check if there is more input (i.e., a third name)
     if (!cin.eof())
     {
+        // If there is a third name, read it as the initial
         cin >> initial;
         char c = middle[0];
+        c = toupper(c);
+        initial[0]= toupper(initial[0]);
+        first[0] = toupper(first[0]);
         cout << initial << ", " << first << " " << c << "." << endl;
     }
     else
     {
+        // If there is no third name, use the middle name as the initial
         initial = middle;
+        initial[0]= toupper(initial[0]);
+        first[0] = toupper(first[0]);
         cout << initial << ", " << first << endl;
     }
 }
