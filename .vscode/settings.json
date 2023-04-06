@@ -9,6 +9,7 @@
         "fstream": "cpp",
         "istream": "cpp",
         "string": "cpp",
-        "chrono": "cpp"
+        "chrono": "cpp",
+        "new": "cpp"
     }
 }

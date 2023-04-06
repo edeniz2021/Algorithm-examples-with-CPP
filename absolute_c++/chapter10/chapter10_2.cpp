@@ -22,207 +22,199 @@ polynomial * polynomial, constant * polynomial, polynomial * constant,
          You should decide whether to implement these functions as members, friends, or
 standalone functions.*/
 #include <iostream>
-#include <math.h>
+#include <string>
+#include <cmath>
+
 using namespace std;
+
 class Polynomial
 {
+public:
+    Polynomial();
+    Polynomial(const Polynomial &P);
+    Polynomial(int n);
+    ~Polynomial();
+    friend const Polynomial operator+(const Polynomial &P,const Polynomial &O);
+    Polynomial &operator=(const Polynomial &P);
+    friend const Polynomial operator-(const Polynomial &P,const Polynomial &O);
+    friend const Polynomial operator*(const Polynomial &P,const Polynomial &O);
+    friend istream &operator>>(istream &in, Polynomial &P);
+    double &operator[](int index);
+    int getNum() const { return num; }
+    double evaluate(double x);
+    void print() const;
+
 private:
     double *coeff;
-    int order;
-
-public:
-    int get_order() const
-    {
-        return order;
-    }
-    double get_coeff(int i)
-    {
-        return coeff[i];
-    }
-    Polynomial()
-    {
-        order = 0;
-        coeff = new double[order + 1];
-        for (int i = 0; i <= order; i++)
-        {
-            coeff[i] = 0;
-        }
-    }
-    ~Polynomial();
-    Polynomial(Polynomial &p);
-    void get(Polynomial &p);
-    double evaluate(double x);
-    Polynomial &operator=(const Polynomial &p);
-    friend const Polynomial operator+(const Polynomial &p1, const Polynomial &p2);
-    friend const Polynomial operator-(const Polynomial &p1, const Polynomial &p2);
-    friend const Polynomial operator*(const Polynomial &p1, const Polynomial &p2);
-    friend istream &operator>>(istream &in, Polynomial &p);
+    int num;
 };
-
-void Polynomial ::get(Polynomial &p)
+Polynomial::Polynomial()
 {
-    for (int i = p.get_order() - 1; i > 0; i--)
+    num = 0;
+    coeff = new double[num + 1];
+    for (int i = 0; i <= num; i++)
     {
-        cout << p.get_coeff(i) << "X^" << i << "+";
-        if (i == 1)
-        {
-            cout << p.get_coeff(0);
-        }
+        coeff[i] = 0;
     }
 }
-double Polynomial ::evaluate(double x)
+Polynomial::Polynomial(int n)
 {
-    double result = 0;
-    for (int i = 0; i < order - 1; i++)
-    {
-        result += coeff[i] * pow(x, i);
-    }
-
-    return result;
+    num = n;
+    coeff = new double[num];
 }
-istream &operator>>(istream &in, Polynomial &p)
+Polynomial::Polynomial(const Polynomial &P)
 {
-    cout << "Order Poliynomial n:";
-    in >> p.order;
-    for (int i = 0; i < p.order; i++)
+    num = P.num;
+    coeff = new double[num];
+    for (int i = 0; i < num; i++)
     {
-        cout << "Enter coefficient X^" << i << ":";
-        in >> p.coeff[i];
-    }
-    return in;
-}
-Polynomial ::Polynomial(Polynomial &p)
-{
-    order = p.get_order();
-    coeff = new double[order + 1];
-    for (int i = 0; i <= order; i++)
-    {
-        coeff[i] = p.get_coeff(i);
+        coeff[i] = P.coeff[i];
     }
 }
-Polynomial ::~Polynomial()
+double &Polynomial::operator[](int index)
 {
-    delete[] coeff;
+    return coeff[index];
 }
-Polynomial &Polynomial::operator=(const Polynomial &p)
-{
-    if (order != p.order)
-    {
-        delete[] coeff;
-        order = p.order;
-        coeff = new double[order];
-    }
-    for (int i = 0; i < order; i++)
-    {
-        coeff[i] = p.coeff[i];
-    }
-    return *this;
-}
-const Polynomial operator+(const Polynomial &p1, const Polynomial &p2)
+const Polynomial operator+(const Polynomial &P,const Polynomial &O)
 {
     Polynomial sum;
-    if (p2.get_order() < p1.get_order())
+    if (O.num > P.num)
     {
-        sum.order = p1.get_order();
+        sum.num = O.num;
     }
     else
-    {
-        sum.order = p2.get_order();
-    }
+        sum.num = P.num;
     delete[] sum.coeff;
-    sum.coeff = new double[sum.order];
-    for (int i = 0; i < sum.order; i++)
+    sum.coeff = new double[sum.num + 1];
+    for (int i = 0; i <= sum.num; i++) 
     {
-        sum.coeff[i] = 0;
-        if (i < p1.order)
+        if (i < O.num)
         {
-            sum.coeff[i] += p1.coeff[i];
+            sum.coeff[i] += O.coeff[i];
         }
-        if (i < p2.order)
+        if (i < P.num)
         {
-            sum.coeff[i] += p2.coeff[i];
+            sum.coeff[i] += P.coeff[i]; 
         }
     }
     return sum;
 }
-const Polynomial operator-(const Polynomial &p1, const Polynomial &p2)
+
+const Polynomial operator-(const Polynomial &P,const Polynomial &O)
 {
-    Polynomial dif;
-    if (p1.get_order() < p2.get_order())
+    Polynomial diff;
+    if (O.num > P.num)
     {
-        dif.order = p2.get_order();
+        diff.num = O.num;
     }
     else
+        diff.num = P.num;
+    delete[] diff.coeff;
+    diff.coeff = new double[diff.num + 1];
+    for (int i = 0; i <= diff.num; i++) 
     {
-        dif.order = p1.get_order();
+        if (i < O.num)
+        {
+            diff.coeff[i] = O.coeff[i];
+        }
+        if (i < P.num)
+        {
+            diff.coeff[i] -= P.coeff[i]; 
+        }
     }
-    delete[] dif.coeff;
-    dif.coeff = new double[dif.order];
-    for (int i = 0; i < dif.order; i++)
-    {
-        dif.coeff[i] = 0;
-        dif.coeff[i] = p1.coeff[i] - p2.coeff[i];
-    }
-    return dif;
+    return diff;
 }
-const Polynomial operator*(const Polynomial &p1, const Polynomial &p2)
+
+const Polynomial operator*(const Polynomial &P,const Polynomial &O)
 {
     Polynomial mult;
-    mult.order = p1.get_order() * p2.get_order();
     delete[] mult.coeff;
-    mult.coeff = new double[mult.order];
-    for (int i = 0; i < mult.order; i++)
+    mult.num = P.num + O.num;
+    mult.coeff = new double[mult.num + 1]; 
+    for (int i = 0; i <= mult.num; i++)   
     {
         mult.coeff[i] = 0;
     }
-    for (int i = 0; i < p1.get_order(); i++)
+    for (int i = 0; i < P.num; i++)
     {
-
-        for (int j = 0; j < p2.get_order(); j++)
+        for (int j = 0; j < O.num; j++)
         {
-            mult.coeff[i + j] += p1.coeff[i] * p2.coeff[j];
+            mult.coeff[i + j] += P.coeff[i] * O.coeff[j];
         }
     }
     return mult;
 }
 
+Polynomial::~Polynomial()
+{
+    delete[] coeff;
+}
+Polynomial &Polynomial::operator=(const Polynomial &P)
+{
+    
+    delete[] coeff;
+    num = P.num;
+    coeff = new double[num + 1];
+    for (int i = 0; i <= num; i++)
+    {
+        coeff[i] = P.coeff[i];
+    }
+    return *this;
+}
+
+double Polynomial::evaluate(double x)
+{
+    double result = 0;
+    for (int i = 0; i < num; i++)
+    {
+        result += coeff[i] * pow(x, i);
+    }
+    return result;
+}
+void Polynomial::print() const
+{
+    for (int i = 0; i < num; i++)
+    {
+        cout << coeff[i] << "x^" << i;
+        if (i < num - 1)
+        {
+            cout << "+ ";
+        }
+    }
+}
+istream &operator>>(istream &in, Polynomial &P)
+{
+    cout << "Pow the Plynomial enter n:";
+    in >> P.num;
+    for (int i = 0; i < P.num; i++)
+    {
+        cout << "Enter X^" << i << " : ";
+        in >> P.coeff[i];
+    }
+    return in;
+}
 int main()
 {
-    Polynomial pol1, pol2, result;
-    double x;
-    double res;
-    cout << "*First Polynomial*" << endl;
-    cin >> pol1;
-    pol1.get(pol1);
+    Polynomial p1, p2, p3;
+    int a;
+    double res = 0;
+    cout << "First Polynomial" << endl;
+    cin >> p1;
+    p1.print();
     cout << endl;
-    cout << "*Second Polynomial*" << endl;
-    cin >> pol2;
-    pol2.get(pol2);
+    cout << "Second Polynomial" << endl;
+    cin >> p2;
+    p2.print();
     cout << endl;
-    cout << "Enter value X: ";
-    cin >> x;
-    res = pol1.evaluate(x);
-    cout << "First Polynmial for x value :" << res << endl;
-    res = pol2.evaluate(x);
-    cout << "Second Polynmial for x value :" << res << endl;
-    cout << "First Polynom and second polynom addition:";
-    result = pol1 + pol2;
-    result.get(result);
-    res = result.evaluate(x);
-    cout << endl;
-    cout << "First Polynom and second polynom addition for x value:" << res;
-    cout << endl;
-    res = result.evaluate(x);
-    cout << "First Polynom and second polynom subtraction:";
-    result = pol1 - pol2;
-    result.get(result);
-    cout << endl;
-    cout << "First Polynom and second polynom subtraction for x value:" << res;
-    cout << endl;
-    result = pol1 * pol2;
-    cout << "First Polynom and second polynom multiplication:";
-    result.get(result);
-    res = result.evaluate(x);
-    cout << endl;
-    cout << "First Polynom and second polynom multiplication for x value:" << res;
+    cout << "Enter value X: " << endl;
+    cin >> a;
+    p3 = p1 + p2;
+    res = p3.evaluate(a);
+    cout << "p1 + p2 = " << res << endl;
+    p3 = p1 - p2;
+    res = p3.evaluate(a);
+    cout << "p1 - p2 = " << res << endl;
+    p3 = p1 * p2;
+    res = p3.evaluate(a);
+    cout << "p1 * p2 = " << res << endl;
 }
