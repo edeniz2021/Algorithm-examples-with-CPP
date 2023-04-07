@@ -84,9 +84,8 @@ const Polynomial operator+(const Polynomial &P, const Polynomial &O)
     }
     else
         sum.num = P.num;
-    delete[] sum.coeff;
     sum.coeff = new double[sum.num];
-    for (int i = 0; i < sum.num; i++)
+    for (int i = 0; i <= sum.num; i++)
     {
         if (i < O.num)
         {
@@ -130,7 +129,6 @@ const Polynomial operator-(const Polynomial &P, const Polynomial &O)
 const Polynomial operator*(const Polynomial &P, const Polynomial &O)
 {
     Polynomial mult;
-    delete[] mult.coeff;
     mult.num = P.num + O.num;
     mult.coeff = new double[mult.num];
     for (int i = 0; i <= mult.num; i++)
@@ -155,7 +153,6 @@ Polynomial &Polynomial::operator=(const Polynomial &P)
 {
     if (num != P.num)
     {
-        delete[] coeff;
         num = P.num;
         coeff = new double[num];
     }
