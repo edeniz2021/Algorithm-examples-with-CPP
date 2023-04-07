@@ -21,20 +21,20 @@ Write a main function that tests all of your functions.*/
 using namespace std;
 class Student
 {
-    public:
+public:
     Student();
     ~Student();
-    void setName(string n){ name = n; }
-    string getName()const{ return name; }
-    void setNum(int a){ numClasses = a ;}
-    int getNum()const{ return numClasses;}
+    void setName(string n) { name = n; }
+    string getName() const { return name; }
+    void setNum(int a) { numClasses = a; }
+    int getNum() const { return numClasses; }
     void inputData();
-    void outputData()const;
-    private:
+    void outputData() const;
+
+private:
     string name;
     int numClasses;
     string *classList;
-
 };
 Student::Student()
 {
@@ -44,28 +44,28 @@ Student::Student()
 }
 Student::~Student()
 {
-    delete []classList;
+    delete[] classList;
 }
 void Student::inputData()
 {
-    
+
     classList = new string[numClasses];
-    for(int i=0;i<numClasses;i++)
+    for (int i = 0; i < numClasses; i++)
     {
         cout << "Enter your course name: ";
-        cin>> classList[i];
+        cin >> classList[i];
     }
 }
-void Student::outputData()const
+void Student::outputData() const
 {
-    cout<< endl;
-    cout << name << " course: " ;
-    for(int i=0;i<numClasses;i++)
+    cout << endl;
+    cout << name << " course: ";
+    for (int i = 0; i < numClasses; i++)
     {
-        cout<< classList[i];
-        if(i!=numClasses-1)
+        cout << classList[i];
+        if (i != numClasses - 1)
         {
-            cout <<", ";
+            cout << ", ";
         }
     }
 }
@@ -74,12 +74,19 @@ int main()
     Student S;
     string n;
     int c;
-    cout << "Enter Student Name: ";
-    cin>> n;
-    S.setName(n);
-    cout << "How many course name enter? ";
-    cin>> c;
-    S.setNum(c);
-    S.inputData();
-    S.outputData();
+    char choice = 'y';
+    while (choice == 'y')
+    {
+        cout << "Enter Student Name: ";
+        cin >> n;
+        S.setName(n);
+        cout << "How many course name enter? ";
+        cin >> c;
+        S.setNum(c);
+        S.inputData();
+        S.outputData();
+        cout << endl;
+        cout << "Did you want enter new student? y/n:";
+        cin>>choice;
+    }
 }
