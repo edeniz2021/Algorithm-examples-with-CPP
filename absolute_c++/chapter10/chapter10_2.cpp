@@ -34,10 +34,10 @@ public:
     Polynomial(const Polynomial &P);
     Polynomial(int n);
     ~Polynomial();
-    friend const Polynomial operator+(const Polynomial &P,const Polynomial &O);
+    friend const Polynomial operator+(const Polynomial &P, const Polynomial &O);
     Polynomial &operator=(const Polynomial &P);
-    friend const Polynomial operator-(const Polynomial &P,const Polynomial &O);
-    friend const Polynomial operator*(const Polynomial &P,const Polynomial &O);
+    friend const Polynomial operator-(const Polynomial &P, const Polynomial &O);
+    friend const Polynomial operator*(const Polynomial &P, const Polynomial &O);
     friend istream &operator>>(istream &in, Polynomial &P);
     double &operator[](int index);
     int getNum() const { return num; }
@@ -51,7 +51,7 @@ private:
 Polynomial::Polynomial()
 {
     num = 0;
-    coeff = new double[num + 1];
+    coeff = new double[num];
     for (int i = 0; i <= num; i++)
     {
         coeff[i] = 0;
@@ -75,7 +75,7 @@ double &Polynomial::operator[](int index)
 {
     return coeff[index];
 }
-const Polynomial operator+(const Polynomial &P,const Polynomial &O)
+const Polynomial operator+(const Polynomial &P, const Polynomial &O)
 {
     Polynomial sum;
     if (O.num > P.num)
@@ -85,8 +85,8 @@ const Polynomial operator+(const Polynomial &P,const Polynomial &O)
     else
         sum.num = P.num;
     delete[] sum.coeff;
-    sum.coeff = new double[sum.num + 1];
-    for (int i = 0; i <= sum.num; i++) 
+    sum.coeff = new double[sum.num];
+    for (int i = 0; i < sum.num; i++)
     {
         if (i < O.num)
         {
@@ -94,13 +94,13 @@ const Polynomial operator+(const Polynomial &P,const Polynomial &O)
         }
         if (i < P.num)
         {
-            sum.coeff[i] += P.coeff[i]; 
+            sum.coeff[i] += P.coeff[i];
         }
     }
     return sum;
 }
 
-const Polynomial operator-(const Polynomial &P,const Polynomial &O)
+const Polynomial operator-(const Polynomial &P, const Polynomial &O)
 {
     Polynomial diff;
     if (O.num > P.num)
@@ -109,29 +109,31 @@ const Polynomial operator-(const Polynomial &P,const Polynomial &O)
     }
     else
         diff.num = P.num;
-    delete[] diff.coeff;
-    diff.coeff = new double[diff.num + 1];
-    for (int i = 0; i <= diff.num; i++) 
+
+    diff.coeff = new double[diff.num +1]; 
+    for (int i = 0; i <= diff.num; i++)
     {
+        diff.coeff[i] = 0;
         if (i < O.num)
         {
-            diff.coeff[i] = O.coeff[i];
+            diff.coeff[i] += P.coeff[i];
+
         }
         if (i < P.num)
         {
-            diff.coeff[i] -= P.coeff[i]; 
+            diff.coeff[i] -= O.coeff[i];
         }
     }
     return diff;
 }
 
-const Polynomial operator*(const Polynomial &P,const Polynomial &O)
+const Polynomial operator*(const Polynomial &P, const Polynomial &O)
 {
     Polynomial mult;
     delete[] mult.coeff;
     mult.num = P.num + O.num;
-    mult.coeff = new double[mult.num + 1]; 
-    for (int i = 0; i <= mult.num; i++)   
+    mult.coeff = new double[mult.num];
+    for (int i = 0; i <= mult.num; i++)
     {
         mult.coeff[i] = 0;
     }
@@ -151,11 +153,13 @@ Polynomial::~Polynomial()
 }
 Polynomial &Polynomial::operator=(const Polynomial &P)
 {
-    
-    delete[] coeff;
-    num = P.num;
-    coeff = new double[num + 1];
-    for (int i = 0; i <= num; i++)
+    if (num != P.num)
+    {
+        delete[] coeff;
+        num = P.num;
+        coeff = new double[num];
+    }
+    for (int i = 0; i < num; i++)
     {
         coeff[i] = P.coeff[i];
     }
@@ -195,7 +199,7 @@ istream &operator>>(istream &in, Polynomial &P)
 }
 int main()
 {
-    Polynomial p1, p2, p3;
+    Polynomial p1, p2, p3,p4,p5;
     int a;
     double res = 0;
     cout << "First Polynomial" << endl;
@@ -211,10 +215,10 @@ int main()
     p3 = p1 + p2;
     res = p3.evaluate(a);
     cout << "p1 + p2 = " << res << endl;
-    p3 = p1 - p2;
-    res = p3.evaluate(a);
+    p4 = p1 - p2;
+    res = p4.evaluate(a);
     cout << "p1 - p2 = " << res << endl;
-    p3 = p1 * p2;
-    res = p3.evaluate(a);
+    p5 = p1 * p2;
+    res = p5.evaluate(a);
     cout << "p1 * p2 = " << res << endl;
 }
