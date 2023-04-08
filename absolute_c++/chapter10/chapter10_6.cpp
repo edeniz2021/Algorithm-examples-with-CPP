@@ -74,26 +74,31 @@ void DynamicStringArray::addEntry(string input)
         dynamicArray = new string[size];
         dynamicArray[size - 1] = input;
     }
-    // Create a temporary array to store the existing elements
-    string *temp;
-    temp = new string[size];
-    for (int i = 0; i < size; i++)
+    else
     {
-        temp[i] = dynamicArray[i];
+        // Create a temporary array to store the existing elements
+        string *temp;
+        temp = new string[size];
+        for (int i = 0; i < size; i++)
+        {
+            temp[i] = dynamicArray[i];
+        }
+        // Deallocate memory for the existing dynamicArray
+        delete[] dynamicArray;
+        // Allocate memory for a new dynamicArray with increased size
+        dynamicArray = new string[size + 1];
+        for (int i = 0; i < size; i++)
+        {
+            // Copy elements from the temporary array to the new dynamicArray
+            dynamicArray[i] = temp[i];
+        }
+        // Add the new input string to the end of the dynamicArray
+        dynamicArray[size] = input;
+        size++;
+        delete[] temp;
     }
-    // Deallocate memory for the existing dynamicArray
-    delete[] dynamicArray;
-    // Allocate memory for a new dynamicArray with increased size
-    dynamicArray = new string[size + 1];
-    for (int i = 0; i < size; i++)
-    {
-        // Copy elements from the temporary array to the new dynamicArray
-        dynamicArray[i] = temp[i];
-    }
-    // Add the new input string to the end of the dynamicArray
-    dynamicArray[size] = input;
     // Deallocate memory for the temporary array
-    delete[] temp;
+    
 }
 
 bool DynamicStringArray::deleteEntry(string input)
@@ -128,4 +133,27 @@ bool DynamicStringArray::deleteEntry(string input)
 
         return true; // Return true indicating successful deletion
     }
+}
+
+int main()
+{
+    DynamicStringArray DSA,ASD;
+    string a;
+    cout << "***********TEST**************" << endl;
+    DSA.addEntry("apple");
+    DSA.addEntry("orange");
+    DSA.addEntry("banana");
+    cout << "Dynamic arraylist:" << endl;
+    for (int i = 0; i < 3; i++)
+    {
+        cout << DSA.getEntry(i) << endl;
+    }
+    cout << endl;
+    DSA.deleteEntry("orange");
+    cout << "Delete orange, new array :" << endl;
+    for (int i = 0; i < 2; i++)
+    {
+        cout << DSA.getEntry(i) << endl;
+    }
+    cout << "******************************" << endl;
 }
