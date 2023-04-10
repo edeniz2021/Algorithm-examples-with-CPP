@@ -230,6 +230,9 @@ void ppmImage::printPpm() const
 {
     const int pixelDigit = 3;
     cout << endl;
+    cout << format << endl;
+    cout << width << " "<< heigth <<endl;
+    cout << "255" << endl;
     for (int i = 0; i < getHeigth(); i++) // write pixel values in row-major order, separated by spaces
     {
         for (int j = 0; j < getWidth() * pixelDigit; j++) // write pixel values in row-major order, separated by spaces,
@@ -344,6 +347,7 @@ int main()
     ppmImage i("deneme.ppm");
     ppmImage k("test.ppm");
     ppmImage l,m;
+    cout << i << endl;
     l = i + k;
     l.printPpm();
     m = i -k;
