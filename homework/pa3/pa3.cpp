@@ -14,12 +14,14 @@ public:
     void openImage();   // to read the file
     void saveImage();   // to write the file
     void scriptImage(); // to make grayscale
+    void setPixelInfo(int w, int h, int color, int value);
     void printPpm() const;
     void setWidth(int w) { width = w; }
     void setHeigth(int h) { heigth = h; }
     int getWidth() const { return width; }
     int getHeigth() const { return heigth; }
     int getPix() const { return pix; }
+    int getPixelInfo(int w, int h, int color);
     ppmImage operator+(const ppmImage &I);
     ppmImage operator-(const ppmImage &I);
     friend ostream &operator<<(ostream &out, const ppmImage &I);
@@ -36,7 +38,9 @@ ppmImage::ppmImage()
     heigth = 0;
     pix = 0;
     format = "";
+    pixel.resize(heigth, vector<int>(width * 3));
 }
+
 ppmImage::ppmImage(int w, int h)
 {
     heigth = h;
@@ -252,9 +256,9 @@ void ppmImage::printPpm() const
 }
 ppmImage ppmImage::operator+(const ppmImage &I)
 {
-    if (heigth != I.heigth && width != I.width)
+    if (heigth != I.heigth || width != I.width)
     {
-        return *this; // düzelt
+        return ppmImage(0,0); 
     }
     ppmImage sum(width, heigth);
     sum.pixel.resize(sum.heigth, vector<int>(sum.width * 3));
@@ -283,9 +287,9 @@ ppmImage ppmImage::operator+(const ppmImage &I)
 }
 ppmImage ppmImage::operator-(const ppmImage &I)
 {
-    if (heigth != I.heigth && width != I.width)
+    if (heigth != I.heigth || width != I.width)
     {
-        return *this; // düzelt
+        return ppmImage(); 
     }
     ppmImage diff(width, heigth);
     diff.pixel.resize(diff.heigth, vector<int>(diff.width * 3));
@@ -341,15 +345,23 @@ int & ppmImage::operator()(int w, int h, int color)
     int & result = pixel[h][w * 3 + color];
     return result;
 }
+// Member function to return individual pixel information
+int ppmImage::getPixelInfo(int w, int h, int color)
+{
+    return pixel[h][w * 3 + color]; // Since each pixel has three color values (r, g, b), we multiply the width by 3 and add the color index to get the corresponding color value.
+}
+
+// Member function to change individual pixel values
+void ppmImage::setPixelInfo(int w, int h, int color, int value)
+{
+    pixel[h][w * 3 + color] = value; // Since each pixel has three color values (r, g, b), we multiply the width by 3 and add the color index to set the corresponding color value.
+}
 
 int main()
 {
     ppmImage i("deneme.ppm");
     ppmImage k("test.ppm");
     ppmImage l,m;
-    cout << i << endl;
-    l = i + k;
-    l.printPpm();
-    m = i -k;
+    m = i + k;
     m.printPpm();
 }
