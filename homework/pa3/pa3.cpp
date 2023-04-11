@@ -21,10 +21,12 @@ public:
     int getHeigth() const { return heigth; }
     int getPix() const { return pix; }
     int getPixelInfo(int w, int h, int color);
+    void swap(int& a, int& b);
     ppmImage operator+(const ppmImage &I);
     ppmImage operator-(const ppmImage &I);
     friend ostream &operator<<(ostream &out, const ppmImage &I);
     int &operator()(int w, int h, int color);
+    const int &operator()(int w, int h, int color)const;
 
 private:
     int width, heigth, pix;
@@ -43,6 +45,7 @@ ppmImage::ppmImage(int w, int h)
 {
     heigth = h;
     width = w;
+    pixel.resize(heigth, vector<int>(width * 3));
 }
 ppmImage::ppmImage(const string fileName)
 {
@@ -264,6 +267,11 @@ int &ppmImage::operator()(int w, int h, int color)
     int &result = pixel[h][w * 3 + color];
     return result;
 }
+const int &ppmImage::operator()(int w, int h, int color)const
+{
+    //int &result = pixel[h][w * 3 + color];
+    return pixel[h][w * 3 + color];
+}
 // Member function to return individual pixel information
 int ppmImage::getPixelInfo(int w, int h, int color)
 {
@@ -275,11 +283,17 @@ void ppmImage::setPixelInfo(int w, int h, int color, int value)
 {
     pixel[h][w * 3 + color] = value; // Since each pixel has three color values (r, g, b), we multiply the width by 3 and add the color index to set the corresponding color value.
 }
+void ppmImage::swap(int& a, int& b)
+{
+    int temp = a;
+    a = b;
+    b = temp;
+}
 
 int read_ppm(const string source_ppm_file_name, ppmImage &destination_object);
 int write_ppm(const string destination_ppm_file_name, const ppmImage &source_object);
-//int swap_channels(ppmImage &image_object_to_be_modified, int swap_choice);
-//ppmImage single_color(const ppmImage &source, int color_choice);
+int swap_channels(ppmImage &image_object_to_be_modified, int swap_choice);
+ppmImage single_color(const ppmImage &source, int color_choice);
 int test_addition(const string filename_image1, const string filename_image2, const string filename_image3);
 int test_subtraction(const string filename_image1, const string filename_image2, const string filename_image3);
 int test_print(const string filename_image1);
@@ -294,7 +308,7 @@ int main()
 		// Execute corresponding process
         cout <<     "enter the number: " ;
         cin>>choiceNumber;
-        while(choiceNumber!=4)
+        while(choiceNumber!=8)
         {
             cin>>choiceNumber;
 		switch(choiceNumber){
@@ -304,12 +318,33 @@ int main()
 			case 2:
 				test_subtraction(ppmFileName1, ppmFileName2, ppmFileName3);
 				break;
-			case 3:
+            case 3:
 				read_ppm(ppmFileName1, readPPMImage);
+				swap_channels(readPPMImage, 1);
+				write_ppm(ppmFileName3, readPPMImage);
+				break;
+			case 4:
+				read_ppm(ppmFileName1, readPPMImage);
+				swap_channels(readPPMImage, 2);
 				write_ppm(ppmFileName2, readPPMImage);
 				break;
-            case 4:
-				exit(0);
+			case 5:
+				read_ppm(ppmFileName1, readPPMImage);
+				processedPPMImage = single_color(readPPMImage, 0);
+				write_ppm(ppmFileName2, processedPPMImage);
+				break;
+			case 6:
+				read_ppm(ppmFileName1, readPPMImage);
+				processedPPMImage = single_color(readPPMImage, 1);
+				write_ppm(ppmFileName2, processedPPMImage);
+				break;
+			case 7:
+				read_ppm(ppmFileName1, readPPMImage);
+				processedPPMImage = single_color(readPPMImage, 2);
+				write_ppm(ppmFileName2, processedPPMImage);
+				break;
+            case 8:
+                exit(0);
                 break;
             default:
 				cout << "Invalid choice number!\n";	// Inform if invalid choice number is entered
@@ -343,4 +378,64 @@ int test_print(const string filename_image1)
     ppmImage imagePrint(filename_image1);
     cout << imagePrint;
     return 1;
+}
+ppmImage single_color(const ppmImage& source, int color_choice)
+{
+    ppmImage temp(source.getWidth(), source.getHeigth());
+
+    for (int i = 0; i < source.getHeigth(); i++)
+    {
+        for (int j = 0; j < source.getWidth(); j++)
+        {
+            // Copy only the selected color channel and set other channels to zero
+            switch (color_choice)
+            {
+            case 1: // Red channel is preserved
+                temp(i, j, 0) = source(i, j, 0); // Red channel
+                temp(i, j, 1) = 0; // Green channel
+                temp(i, j, 2) = 0; // Blue channel
+                break;
+            case 2: // Green channel is preserved
+                temp(i, j, 0) = 0; // Red channel
+                temp(i, j, 1) = source(i, j, 1); // Green channel
+                temp(i, j, 2) = 0; // Blue channel
+                break;
+            case 3: // Blue channel is preserved
+                temp(i, j, 0) = 0; // Red channel
+                temp(i, j, 1) = 0; // Green channel
+                temp(i, j, 2) = source(i, j, 2); // Blue channel
+                break;
+            }
+        }
+    }
+    return temp;
+}
+int swap_channels(ppmImage& image_object_to_be_modified, int swap_choice)
+{
+    int width = image_object_to_be_modified.getWidth();
+    int height = image_object_to_be_modified.getHeigth();
+    int result = 1;
+    for (int i = 0; i < height; i++)
+    {
+        for (int j = 0; j < width; j++)
+        {
+            // Copy only the selected color channel and set other channels to zero
+            switch (swap_choice)
+            {
+            case 1: // Red  and green swap
+                swap(image_object_to_be_modified(i, j, 0), image_object_to_be_modified(i, j, 1)); // Swap red and green channels
+                break;
+            case 2: // Red and blue swap
+                swap(image_object_to_be_modified(i, j, 0), image_object_to_be_modified(i, j, 2)); // Swap red and blue channels
+                break;
+            case 3: // green and blue swap
+                swap(image_object_to_be_modified(i, j, 1), image_object_to_be_modified(i, j, 2)); // Swap green and blue channels
+                break;
+            default: // No swaps
+                result = 0;
+                break;
+            }
+        }
+    }
+    return result; // Operation is successful
 }
