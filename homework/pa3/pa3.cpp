@@ -10,12 +10,11 @@ public:
     ppmImage();
     ppmImage(const string fileName);
     ppmImage(int w, int h);
-    void Menu();
-    void openImage();   // to read the file
-    void saveImage();   // to write the file
-    void scriptImage(); // to make grayscale
+    int ReadImage(const string fileName); // to read the file
+    int WriteImage(const string fileName)const;     // to write the file
+    void scriptImage();                   // to make grayscale
     void setPixelInfo(int w, int h, int color, int value);
-    void printPpm() const;
+    void printDimensionPpm() const;
     void setWidth(int w) { width = w; }
     void setHeigth(int h) { heigth = h; }
     int getWidth() const { return width; }
@@ -25,7 +24,7 @@ public:
     ppmImage operator+(const ppmImage &I);
     ppmImage operator-(const ppmImage &I);
     friend ostream &operator<<(ostream &out, const ppmImage &I);
-    int& operator()(int w, int h, int color);
+    int &operator()(int w, int h, int color);
 
 private:
     int width, heigth, pix;
@@ -38,7 +37,6 @@ ppmImage::ppmImage()
     heigth = 0;
     pix = 0;
     format = "";
-    pixel.resize(heigth, vector<int>(width * 3));
 }
 
 ppmImage::ppmImage(int w, int h)
@@ -70,75 +68,10 @@ ppmImage::ppmImage(const string fileName)
     else
         cout << "File is not read!" << endl;
 }
-void ppmImage::Menu()
-{
-    int button = 1;
-    int buttonTwo;
-    while (button != 0)
-    {
-        cout << "MAIN MENU" << endl;
-        cout << "0 - Exit" << endl;
-        cout << "1 - Open An Image(D)" << endl;
-        cout << "2 - Save Image Data(D)" << endl;
-        cout << "3 - Scripts(D)" << endl;
-        cin >> button;
-        if (button == 1) // If it chooses 1, it will go to the menu again
-        {
-            buttonTwo = 1;
-            while (buttonTwo != 0)
-            {
-                cout << "OPEN AN IMAGE MENU" << endl;
-                cout << "0 - UP" << endl;
-                cout << "1 - Enter The Name Of The Image File" << endl;
-                cin >> buttonTwo;
-                if (buttonTwo == 1)
-                {
-                    openImage();
-                }
-            }
-        }
-        else if (button == 2)
-        {
-            buttonTwo = 1;
-            while (buttonTwo != 0)
-            {
-                cout << "SAVE IMAGE DATA MENU" << endl;
-                cout << "0 - UP" << endl;
-                cout << "1 - Enter A File Name" << endl;
-                cin >> buttonTwo;
-                if (buttonTwo == 1)
-                {
-                    saveImage();
-                }
-            }
-        }
-        else if (button == 3)
-        {
-            buttonTwo = 1;
-            while (buttonTwo != 0)
-            {
-                cout << "CONVERT TO GRAYSCALE MENU" << endl;
-                cout << "0 - UP" << endl;
-                cout << "1 - Enter Coefficients For RED GREEN And BLUE Channels." << endl;
-                cin >> buttonTwo;
-                if (buttonTwo == 1)
-                {
-                    scriptImage();
-                }
-            }
-        }
-        else
-        {
-            exit(0);
-        }
-    }
-}
 
-void ppmImage::openImage()
+int ppmImage::ReadImage(const string fileName)
 {
     const int pixelDigit = 3; // r,g,b
-    string fileName;
-    cin >> fileName;
     int x;
     ifstream file(fileName); // read image data from a file and store it in the pixel matrix
     if (file.is_open())
@@ -157,15 +90,17 @@ void ppmImage::openImage()
             }
         }
         file.close();
+        return 1;
     }
     else
+    {
         cout << "File is not read!" << endl;
+        return 0;
+    }
 }
-void ppmImage::saveImage()
+int ppmImage::WriteImage(const string fileName)const
 {
     const int pixelDigit = 3; // r,g,b
-    string fileName;
-    cin >> fileName;
     ofstream file(fileName);
     if (file.is_open())
     {
@@ -192,9 +127,13 @@ void ppmImage::saveImage()
         }
 
         file.close();
+        return 1;
     }
     else
+    {
         cout << "Not write txt!" << endl;
+        return 0;
+    }
 }
 
 void ppmImage::scriptImage()
@@ -230,35 +169,15 @@ void ppmImage::scriptImage()
         }
     }
 }
-void ppmImage::printPpm() const
+void ppmImage::printDimensionPpm() const
 {
-    const int pixelDigit = 3;
-    cout << endl;
-    cout << format << endl;
-    cout << width << " "<< heigth <<endl;
-    cout << "255" << endl;
-    for (int i = 0; i < getHeigth(); i++) // write pixel values in row-major order, separated by spaces
-    {
-        for (int j = 0; j < getWidth() * pixelDigit; j++) // write pixel values in row-major order, separated by spaces,
-        {
-            cout << pixel[i][j];
-            if (j + 1 != getWidth() * pixelDigit)
-            {
-                cout << " ";
-            }
-        }
-        if (i + 1 != getHeigth()) // and start a new line after writing each row of pixels except for the last row
-        {
-            cout << endl;
-        }
-    }
-    cout << endl;
+    cout << width << " " << heigth << endl;
 }
 ppmImage ppmImage::operator+(const ppmImage &I)
 {
     if (heigth != I.heigth || width != I.width)
     {
-        return ppmImage(0,0); 
+        return ppmImage(0, 0);
     }
     ppmImage sum(width, heigth);
     sum.pixel.resize(sum.heigth, vector<int>(sum.width * 3));
@@ -289,7 +208,7 @@ ppmImage ppmImage::operator-(const ppmImage &I)
 {
     if (heigth != I.heigth || width != I.width)
     {
-        return ppmImage(); 
+        return ppmImage();
     }
     ppmImage diff(width, heigth);
     diff.pixel.resize(diff.heigth, vector<int>(diff.width * 3));
@@ -320,7 +239,7 @@ ppmImage ppmImage::operator-(const ppmImage &I)
 ostream &operator<<(ostream &out, const ppmImage &I)
 {
     out << I.format << endl;
-    out << I.width << " "<< I.heigth <<endl;
+    out << I.width << " " << I.heigth << endl;
     out << I.pix << endl;
     for (int i = 0; i < I.getHeigth(); i++) // write pixel values in row-major order, separated by spaces
     {
@@ -329,7 +248,7 @@ ostream &operator<<(ostream &out, const ppmImage &I)
             out << I.pixel[i][j];
             if (j + 1 != I.getWidth() * 3)
             {
-                out<< " ";
+                out << " ";
             }
         }
         if (i + 1 != I.getHeigth()) // and start a new line after writing each row of pixels except for the last row
@@ -340,9 +259,9 @@ ostream &operator<<(ostream &out, const ppmImage &I)
 
     return out;
 }
-int & ppmImage::operator()(int w, int h, int color)
+int &ppmImage::operator()(int w, int h, int color)
 {
-    int & result = pixel[h][w * 3 + color];
+    int &result = pixel[h][w * 3 + color];
     return result;
 }
 // Member function to return individual pixel information
@@ -357,11 +276,71 @@ void ppmImage::setPixelInfo(int w, int h, int color, int value)
     pixel[h][w * 3 + color] = value; // Since each pixel has three color values (r, g, b), we multiply the width by 3 and add the color index to set the corresponding color value.
 }
 
+int read_ppm(const string source_ppm_file_name, ppmImage &destination_object);
+int write_ppm(const string destination_ppm_file_name, const ppmImage &source_object);
+//int swap_channels(ppmImage &image_object_to_be_modified, int swap_choice);
+//ppmImage single_color(const ppmImage &source, int color_choice);
+int test_addition(const string filename_image1, const string filename_image2, const string filename_image3);
+int test_subtraction(const string filename_image1, const string filename_image2, const string filename_image3);
+int test_print(const string filename_image1);
 int main()
 {
-    ppmImage i("deneme.ppm");
-    ppmImage k("test.ppm");
-    ppmImage l,m;
-    m = i + k;
-    m.printPpm();
+		int choiceNumber;									// Argument number to execute corresponding process
+		string ppmFileName1= "deneme.ppm", ppmFileName2= "test.ppm",ppmFileName3= "output.ppm";	// File names
+
+		ppmImage readPPMImage;		// Image of read file
+		ppmImage processedPPMImage;	// Image that is the result of process
+
+		// Execute corresponding process
+        cout <<     "enter the number: " ;
+        cin>>choiceNumber;
+        while(choiceNumber!=4)
+        {
+            cin>>choiceNumber;
+		switch(choiceNumber){
+			case 1:
+				test_addition(ppmFileName1, ppmFileName2, ppmFileName3);
+				break;
+			case 2:
+				test_subtraction(ppmFileName1, ppmFileName2, ppmFileName3);
+				break;
+			case 3:
+				read_ppm(ppmFileName1, readPPMImage);
+				write_ppm(ppmFileName2, readPPMImage);
+				break;
+            case 4:
+				exit(0);
+                break;
+            default:
+				cout << "Invalid choice number!\n";	// Inform if invalid choice number is entered
+		}
+        }
+	}
+int read_ppm(const string source_ppm_file_name, ppmImage &destination_object)
+{
+    return destination_object.ReadImage(source_ppm_file_name);
+}
+int write_ppm(const string destination_ppm_file_name, const ppmImage &source_object)
+{
+    return source_object.WriteImage(destination_ppm_file_name);
+}
+int test_addition(const string filename_image1, const string filename_image2, const string filename_image3)
+{
+    ppmImage image1(filename_image1);
+    ppmImage image2(filename_image2);
+    ppmImage image3 = image1 + image2;
+    return write_ppm(filename_image3,image3);
+}
+int test_subtraction(const string filename_image1, const string filename_image2, const string filename_image3)
+{
+    ppmImage image1(filename_image1);
+    ppmImage image2(filename_image2);
+    ppmImage image3 = image1 - image2;
+    return write_ppm(filename_image3,image3);
+}
+int test_print(const string filename_image1)
+{
+    ppmImage imagePrint(filename_image1);
+    cout << imagePrint;
+    return 1;
 }
