@@ -10,9 +10,9 @@ public:
     ppmImage();
     ppmImage(const string fileName);
     ppmImage(int w, int h);
-    int ReadImage(const string fileName); // to read the file
-    int WriteImage(const string fileName)const;     // to write the file
-    void scriptImage();                   // to make grayscale
+    int ReadImage(const string fileName);        // to read the file
+    int WriteImage(const string fileName) const; // to write the file
+    void scriptImage();                          // to make grayscale
     void setPixelInfo(int w, int h, int color, int value);
     void printDimensionPpm() const;
     void setWidth(int w) { width = w; }
@@ -21,16 +21,16 @@ public:
     int getHeigth() const { return heigth; }
     int getPix() const { return pix; }
     int getPixelInfo(int w, int h, int color);
-    void swap(int& a, int& b);
+    void swap(int &a, int &b);
     ppmImage operator+(const ppmImage &I);
     ppmImage operator-(const ppmImage &I);
     friend ostream &operator<<(ostream &out, const ppmImage &I);
     int &operator()(int w, int h, int color);
-    const int &operator()(int w, int h, int color)const;
+    const int &operator()(int w, int h, int color) const;
 
 private:
     int width, heigth, pix;
-    vector<vector<int> > pixel; // keeps pixel data
+    vector<vector<int>> pixel; // keeps pixel data
     string format;
 };
 ppmImage::ppmImage()
@@ -46,6 +46,8 @@ ppmImage::ppmImage(int w, int h)
     heigth = h;
     width = w;
     pixel.resize(heigth, vector<int>(width * 3));
+    pix = 255;
+    format = "P3";
 }
 ppmImage::ppmImage(const string fileName)
 {
@@ -101,7 +103,7 @@ int ppmImage::ReadImage(const string fileName)
         return 0;
     }
 }
-int ppmImage::WriteImage(const string fileName)const
+int ppmImage::WriteImage(const string fileName) const
 {
     const int pixelDigit = 3; // r,g,b
     ofstream file(fileName);
@@ -176,27 +178,36 @@ void ppmImage::printDimensionPpm() const
 {
     cout << width << " " << heigth << endl;
 }
+// Operator overloading for addition of two ppmImage objects.
 ppmImage ppmImage::operator+(const ppmImage &I)
 {
-    if (heigth != I.heigth || width != I.width)
+    if (heigth != I.heigth || width != I.width) // Check if the heights and widths of the two images are the same.
     {
-        return ppmImage(0, 0);
+        return ppmImage(0, 0); // If not, return a default ppmImage object with height and width set to 0.
     }
-    ppmImage sum(width, heigth);
-    sum.pixel.resize(sum.heigth, vector<int>(sum.width * 3));
-    for (int i = 0; i < getHeigth(); i++)
+    ppmImage sum(width, heigth);                              // Create a new ppmImage object to store the sum with the same height and width as the original images.
+    sum.pixel.resize(sum.heigth, vector<int>(sum.width * 3)); // Resize the pixel matrix of the sum image to match the height and width.
+
+    sum.pix = I.pix + pix; // Add the pixel values of the two images and store the result in the sum image.
+    if (sum.pix > 255)     // Clamp the pixel values to the maximum of 255.
+        sum.pix = 255;
+
+    for (int i = 0; i < getHeigth(); i++) // Loop through each row of the images.
     {
-        for (int j = 0; j < getWidth() * 3; j += 3)
+        for (int j = 0; j < getWidth() * 3; j += 3) // Loop through each pixel in the row.
         {
+            // Add the pixel values of the corresponding pixels in the two images and store the result in the sum image's pixel matrix.
             sum.pixel[i][j] = pixel[i][j] + I.pixel[i][j];
             sum.pixel[i][j + 1] = pixel[i][j + 1] + I.pixel[i][j + 1];
             sum.pixel[i][j + 2] = pixel[i][j + 2] + I.pixel[i][j + 2];
         }
     }
-    for (int i = 0; i < getHeigth(); i++)
+
+    for (int i = 0; i < getHeigth(); i++) // Loop through each row of the sum image.
     {
-        for (int j = 0; j < getWidth() * 3; j += 3)
+        for (int j = 0; j < getWidth() * 3; j += 3) // Loop through each pixel in the row.
         {
+            // Clamp the pixel values of the sum image to the maximum of 255.
             if (sum.pixel[i][j] > 255)
                 sum.pixel[i][j] = 255;
             if (sum.pixel[i][j + 1] > 255)
@@ -205,7 +216,7 @@ ppmImage ppmImage::operator+(const ppmImage &I)
                 sum.pixel[i][j + 2] = 255;
         }
     }
-    return sum;
+    return sum; // Return the sum image.
 }
 ppmImage ppmImage::operator-(const ppmImage &I)
 {
@@ -215,6 +226,7 @@ ppmImage ppmImage::operator-(const ppmImage &I)
     }
     ppmImage diff(width, heigth);
     diff.pixel.resize(diff.heigth, vector<int>(diff.width * 3));
+    diff.pix = 255;
     for (int i = 0; i < getHeigth(); i++)
     {
         for (int j = 0; j < getWidth() * 3; j += 3)
@@ -267,10 +279,10 @@ int &ppmImage::operator()(int w, int h, int color)
     int &result = pixel[h][w * 3 + color];
     return result;
 }
-const int &ppmImage::operator()(int w, int h, int color)const
+const int &ppmImage::operator()(int w, int h, int color) const
 {
-    //int &result = pixel[h][w * 3 + color];
-    return pixel[h][w * 3 + color];
+    const int &result = pixel[h][w * 3 + color];
+    return result;
 }
 // Member function to return individual pixel information
 int ppmImage::getPixelInfo(int w, int h, int color)
@@ -283,7 +295,7 @@ void ppmImage::setPixelInfo(int w, int h, int color, int value)
 {
     pixel[h][w * 3 + color] = value; // Since each pixel has three color values (r, g, b), we multiply the width by 3 and add the color index to set the corresponding color value.
 }
-void ppmImage::swap(int& a, int& b)
+void ppmImage::swap(int &a, int &b)
 {
     int temp = a;
     a = b;
@@ -297,60 +309,91 @@ ppmImage single_color(const ppmImage &source, int color_choice);
 int test_addition(const string filename_image1, const string filename_image2, const string filename_image3);
 int test_subtraction(const string filename_image1, const string filename_image2, const string filename_image3);
 int test_print(const string filename_image1);
-int main()
+
+int main(int argc, char **argv)
 {
-		int choiceNumber;									// Argument number to execute corresponding process
-		string ppmFileName1= "deneme.ppm", ppmFileName2= "test.ppm",ppmFileName3= "output.ppm";	// File names
+    // Check for number of command line arguments
+    // The first argument is the choice number
+    // The second argument is ppm_file_name1
+    // The third argument is ppm_file_name2 (optional)
+    // The fourth argument is ppm_file_name3 (optional)
+    if (argc < 4 || argc > 5)
+    {
+        cout << "Invalid number of arguments!" << endl;
+        return 0;
+    }
 
-		ppmImage readPPMImage;		// Image of read file
-		ppmImage processedPPMImage;	// Image that is the result of process
+    int choiceNumber = stoi(argv[1]); // Convert argument to integer
+    string ppm_file_name1(argv[2]);   // File name for ppm_file_name1
+    string ppm_file_name2;            // File name for ppm_file_name2
+    string ppm_file_name3;            // File name for ppm_file_name3
 
-		// Execute corresponding process
-        cout <<     "enter the number: " ;
-        cin>>choiceNumber;
-        while(choiceNumber!=8)
+    if (argc == 4)
+    {
+        ppm_file_name2 = string(argv[3]); // File name for ppm_file_name2
+    }
+    if (argc == 5)
+    {
+        ppm_file_name2 = string(argv[3]); // File name for ppm_file_name2
+        ppm_file_name3 = string(argv[4]); // File name for ppm_file_name3
+    }
+
+    ppmImage readImage;      // Image of read file
+    ppmImage processedImage; // Image that is the result of process
+
+    // Execute corresponding process based on choice number
+    switch (choiceNumber)
+    {
+    case 1:
+        if (argc != 5)
         {
-            cin>>choiceNumber;
-		switch(choiceNumber){
-			case 1:
-				test_addition(ppmFileName1, ppmFileName2, ppmFileName3);
-				break;
-			case 2:
-				test_subtraction(ppmFileName1, ppmFileName2, ppmFileName3);
-				break;
-            case 3:
-				read_ppm(ppmFileName1, readPPMImage);
-				swap_channels(readPPMImage, 1);
-				write_ppm(ppmFileName3, readPPMImage);
-				break;
-			case 4:
-				read_ppm(ppmFileName1, readPPMImage);
-				swap_channels(readPPMImage, 2);
-				write_ppm(ppmFileName2, readPPMImage);
-				break;
-			case 5:
-				read_ppm(ppmFileName1, readPPMImage);
-				processedPPMImage = single_color(readPPMImage, 0);
-				write_ppm(ppmFileName2, processedPPMImage);
-				break;
-			case 6:
-				read_ppm(ppmFileName1, readPPMImage);
-				processedPPMImage = single_color(readPPMImage, 1);
-				write_ppm(ppmFileName2, processedPPMImage);
-				break;
-			case 7:
-				read_ppm(ppmFileName1, readPPMImage);
-				processedPPMImage = single_color(readPPMImage, 2);
-				write_ppm(ppmFileName2, processedPPMImage);
-				break;
-            case 8:
-                exit(0);
-                break;
-            default:
-				cout << "Invalid choice number!\n";	// Inform if invalid choice number is entered
-		}
+            cout << "Invalid number of arguments!" << endl;
+            return 0;
         }
-	}
+        test_addition(ppm_file_name1, ppm_file_name2, ppm_file_name3);
+        break;
+    case 2:
+        if (argc != 5)
+        {
+            cout << "Invalid number of arguments!" << endl;
+            return 0;
+        }
+        test_subtraction(ppm_file_name1, ppm_file_name2, ppm_file_name3);
+        break;
+    case 3:
+        read_ppm(ppm_file_name1, readImage);
+        swap_channels(readImage, 2);
+        write_ppm(ppm_file_name2, readImage);
+        break;
+    case 4:
+        read_ppm(ppm_file_name1, readImage);
+        swap_channels(readImage, 3);
+        write_ppm(ppm_file_name2, readImage);
+        break;
+    case 5:
+        read_ppm(ppm_file_name1, readImage);
+        processedImage = single_color(readImage, 0);
+        write_ppm(ppm_file_name2, processedImage);
+        break;
+    case 6:
+        read_ppm(ppm_file_name1, readImage);
+        processedImage = single_color(readImage, 1);
+        write_ppm(ppm_file_name2, processedImage);
+        break;
+    case 7:
+        read_ppm(ppm_file_name1, readImage);
+        processedImage = single_color(readImage, 2);
+        write_ppm(ppm_file_name2, processedImage);
+        break;
+    case 8:
+        exit(0);
+        break;
+    default:
+        cout << "Invalid choice number!" << endl; // Inform if invalid choice number is entered
+    }
+    return 0;
+}
+
 int read_ppm(const string source_ppm_file_name, ppmImage &destination_object)
 {
     return destination_object.ReadImage(source_ppm_file_name);
@@ -364,14 +407,14 @@ int test_addition(const string filename_image1, const string filename_image2, co
     ppmImage image1(filename_image1);
     ppmImage image2(filename_image2);
     ppmImage image3 = image1 + image2;
-    return write_ppm(filename_image3,image3);
+    return write_ppm(filename_image3, image3);
 }
 int test_subtraction(const string filename_image1, const string filename_image2, const string filename_image3)
 {
     ppmImage image1(filename_image1);
     ppmImage image2(filename_image2);
     ppmImage image3 = image1 - image2;
-    return write_ppm(filename_image3,image3);
+    return write_ppm(filename_image3, image3);
 }
 int test_print(const string filename_image1)
 {
@@ -379,7 +422,7 @@ int test_print(const string filename_image1)
     cout << imagePrint;
     return 1;
 }
-ppmImage single_color(const ppmImage& source, int color_choice)
+ppmImage single_color(const ppmImage &source, int color_choice)
 {
     ppmImage temp(source.getWidth(), source.getHeigth());
 
@@ -390,19 +433,19 @@ ppmImage single_color(const ppmImage& source, int color_choice)
             // Copy only the selected color channel and set other channels to zero
             switch (color_choice)
             {
-            case 1: // Red channel is preserved
+            case 1:                              // Red channel is preserved
                 temp(i, j, 0) = source(i, j, 0); // Red channel
-                temp(i, j, 1) = 0; // Green channel
-                temp(i, j, 2) = 0; // Blue channel
+                temp(i, j, 1) = 0;               // Green channel
+                temp(i, j, 2) = 0;               // Blue channel
                 break;
-            case 2: // Green channel is preserved
-                temp(i, j, 0) = 0; // Red channel
+            case 2:                              // Green channel is preserved
+                temp(i, j, 0) = 0;               // Red channel
                 temp(i, j, 1) = source(i, j, 1); // Green channel
-                temp(i, j, 2) = 0; // Blue channel
+                temp(i, j, 2) = 0;               // Blue channel
                 break;
-            case 3: // Blue channel is preserved
-                temp(i, j, 0) = 0; // Red channel
-                temp(i, j, 1) = 0; // Green channel
+            case 3:                              // Blue channel is preserved
+                temp(i, j, 0) = 0;               // Red channel
+                temp(i, j, 1) = 0;               // Green channel
                 temp(i, j, 2) = source(i, j, 2); // Blue channel
                 break;
             }
@@ -410,7 +453,7 @@ ppmImage single_color(const ppmImage& source, int color_choice)
     }
     return temp;
 }
-int swap_channels(ppmImage& image_object_to_be_modified, int swap_choice)
+int swap_channels(ppmImage &image_object_to_be_modified, int swap_choice)
 {
     int width = image_object_to_be_modified.getWidth();
     int height = image_object_to_be_modified.getHeigth();
@@ -422,13 +465,13 @@ int swap_channels(ppmImage& image_object_to_be_modified, int swap_choice)
             // Copy only the selected color channel and set other channels to zero
             switch (swap_choice)
             {
-            case 1: // Red  and green swap
+            case 1:                                                                               // Red  and green swap
                 swap(image_object_to_be_modified(i, j, 0), image_object_to_be_modified(i, j, 1)); // Swap red and green channels
                 break;
-            case 2: // Red and blue swap
+            case 2:                                                                               // Red and blue swap
                 swap(image_object_to_be_modified(i, j, 0), image_object_to_be_modified(i, j, 2)); // Swap red and blue channels
                 break;
-            case 3: // green and blue swap
+            case 3:                                                                               // green and blue swap
                 swap(image_object_to_be_modified(i, j, 1), image_object_to_be_modified(i, j, 2)); // Swap green and blue channels
                 break;
             default: // No swaps
