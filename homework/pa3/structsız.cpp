@@ -197,23 +197,9 @@ ppmImage ppmImage::operator+(const ppmImage &I)
         for (int j = 0; j < getWidth() * 3; j += 3) // Loop through each pixel in the row.
         {
             // Add the pixel values of the corresponding pixels in the two images and store the result in the sum image's pixel matrix.
-            sum.pixel[i][j] = pixel[i][j] + I.pixel[i][j];
-            sum.pixel[i][j + 1] = pixel[i][j + 1] + I.pixel[i][j + 1];
-            sum.pixel[i][j + 2] = pixel[i][j + 2] + I.pixel[i][j + 2];
-        }
-    }
-
-    for (int i = 0; i < getHeigth(); i++) // Loop through each row of the sum image.
-    {
-        for (int j = 0; j < getWidth() * 3; j += 3) // Loop through each pixel in the row.
-        {
-            // Clamp the pixel values of the sum image to the maximum of 255.
-            if (sum.pixel[i][j] > 255)
-                sum.pixel[i][j] = 255;
-            if (sum.pixel[i][j + 1] > 255)
-                sum.pixel[i][j + 1] = 255;
-            if (sum.pixel[i][j + 2] > 255)
-                sum.pixel[i][j + 2] = 255;
+            sum.pixel[i][j] = max(255,pixel[i][j] + I.pixel[i][j]);
+            sum.pixel[i][j + 1] = max(255,pixel[i][j + 1] + I.pixel[i][j + 1]);
+            sum.pixel[i][j + 2] = max(255,pixel[i][j + 2] + I.pixel[i][j + 2]);
         }
     }
     return sum; // Return the sum image.
@@ -231,22 +217,9 @@ ppmImage ppmImage::operator-(const ppmImage &I)
     {
         for (int j = 0; j < getWidth() * 3; j += 3)
         {
-            diff.pixel[i][j] = pixel[i][j] - I.pixel[i][j];
-            diff.pixel[i][j + 1] = pixel[i][j + 1] - I.pixel[i][j + 1];
-            diff.pixel[i][j + 2] = pixel[i][j + 2] - I.pixel[i][j + 2];
-        }
-    }
-    for (int i = 0; i < getHeigth(); i++)
-    {
-        for (int j = 0; j < getWidth() * 3; j += 3)
-        {
-            if (diff.pixel[i][j] < 0)
-                diff.pixel[i][j] = 0;
-            if (diff.pixel[i][j + 1] < 0)
-                diff.pixel[i][j + 1] = 0;
-            if (diff.pixel[i][j + 2] < 0)
-                diff.pixel[i][j + 2] = 0;
-            ;
+            diff.pixel[i][j] = min(0,pixel[i][j] - I.pixel[i][j]);
+            diff.pixel[i][j + 1] = min(0,pixel[i][j + 1] - I.pixel[i][j + 1]);
+            diff.pixel[i][j + 2] = min(0,pixel[i][j + 2] - I.pixel[i][j + 2]);
         }
     }
     return diff;
