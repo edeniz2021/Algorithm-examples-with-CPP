@@ -51,27 +51,7 @@ ppmImage::ppmImage(int w, int h)
 }
 ppmImage::ppmImage(const string fileName)
 {
-    int x;
-    ifstream file(fileName); // read image data from a file and store it in the pixel matrix
-    if (file.is_open())
-    {
-        file >> format;
-        file >> width >> heigth >> pix;
-        pixel.resize(heigth, vector<int>(width * 3)); // the pixel matrix is resized to match the width and height of the image
-        for (int i = 0; i < heigth; i++)
-        {
-            for (int j = 0; j < width * 3; j++)
-            {
-                if ((file >> x))
-                {
-                    pixel[i][j] = x; // the pixel values are stored in row-major order in the matrix
-                }
-            }
-        }
-        file.close();
-    }
-    else
-        cout << "File is not read!" << endl;
+    ReadImage(fileName);
 }
 
 int ppmImage::ReadImage(const string fileName)
