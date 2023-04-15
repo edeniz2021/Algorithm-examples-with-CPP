@@ -30,7 +30,7 @@ public:
 
 private:
     int width, heigth, pix;
-    vector<vector<int>> pixel; // keeps pixel data
+    vector<vector<int> > pixel; // keeps pixel data
     string format;
 };
 ppmImage::ppmImage()
