@@ -21,8 +21,21 @@ namespace PA4
             course = nullptr;
         }
     }
-    Course** Student::getCourses() const
+    Course **Student::getCourses() const
     {
         return course;
     }
+    void Student::add_course(Course *c)
+    {
+        Course **new_courses = new Course *[numCourse + 1];
+        for (int i = 0; i < numCourse; i++)
+        {
+            new_courses[i] = course[i];
+        }
+        new_courses[numCourse] = c;
+        numCourse++;
+        delete[] course;
+        course = new_courses;
+    }
+
 }

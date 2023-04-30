@@ -11,5 +11,13 @@ namespace PA4 {
             SchoolManagementSystem();
             ~SchoolManagementSystem();
             void run();
+            void student_menu();
+            void course_menu();
+            void list_all_students();
+            void list_all_courses();
+            void add_course(Course c);
+            void add_student(Student s);
+            void select_student();
+            void select_course();
     };
 }

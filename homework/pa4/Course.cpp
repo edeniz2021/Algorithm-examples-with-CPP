@@ -22,8 +22,21 @@ namespace PA4
             students = nullptr;
         }
     }
-    Student** Course::getStudents() const
+    Student **Course::getStudents() const
     {
         return students;
     }
+    void Course::add_student(Student *s)
+    {
+        Student **new_students = new Student *[numStudents + 1];
+        for (int i = 0; i < numStudents; i++)
+        {
+            new_students[i] = students[i];
+        }
+        new_students[numStudents] = s;
+        delete[] students;
+        students = new_students;
+        numStudents++;
+    }
+
 }
