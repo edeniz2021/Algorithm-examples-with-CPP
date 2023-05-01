@@ -6,6 +6,7 @@ namespace PA4
         name = "";
         ID = 0;
         course = nullptr;
+        numCourse = 0;
     }
     Student::Student(const std::string n, int id)
     {

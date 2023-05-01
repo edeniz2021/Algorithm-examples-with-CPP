@@ -5,8 +5,8 @@ namespace PA4 {
         private:
             Course** courses;
             Student** students;
-            int numCourses;
-            int numStudents;
+            int numCourses=0;
+            int numStudents=0;
         public:
             SchoolManagementSystem();
             ~SchoolManagementSystem();
@@ -22,7 +22,13 @@ namespace PA4 {
             void select_course();
             void delete_student(Student s);
             void delete_course(Course c);
-            void list_students_registered_to_selected_course(Course c);
+            void list_students_registered_to_the_selected_course(Course c);
+            void add_selected_student_to_a_course(Student s);
+            void drop_selected_student_from_a_course(Student s);
+            void addStudentToCourse(Student &student, Course &course);
+            void dropStudentToCourse(Student &student, Course &course);
+            Course *getCourseByIndex(int index);
+            Student *getStudentByIndex(int index);
             //bool operator==(const SchoolManagementSystem &other) const;
     };
 }

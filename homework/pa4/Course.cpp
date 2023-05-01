@@ -7,6 +7,7 @@ namespace PA4
         name = "";
         code = "";
         students = nullptr;
+        numStudents = 0;
     }
     Course::Course(const std::string n, const std::string c)
     {
