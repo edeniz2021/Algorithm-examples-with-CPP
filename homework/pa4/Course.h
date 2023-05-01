@@ -1,8 +1,8 @@
 #ifndef COURSE_H
 #define COURSE_H
 
-#include <string> // add this line
-
+#include <string> 
+#include "Student.h" 
 namespace PA4
 {
     class Student;
@@ -22,6 +22,8 @@ namespace PA4
         void add_student(Student *s);
         std::string getName()const{ return name;}
         std::string getCode()const{ return code;}
+        bool operator==(const Course &other) const;
+        void delete_student(Student *s);
     };
 }
 

@@ -38,5 +38,30 @@ namespace PA4
         students = new_students;
         numStudents++;
     }
+    void Course::delete_student(Student *s)
+    {
+        int index = -1;
+        for (int i = 0; i < numStudents; i++)
+        {
+            if (students[i] == s)
+            {
+                index = i;
+                break;
+            }
+        }
+        if (index != -1)
+        {
+            delete students[index];
+            for (int i = index; i < numStudents - 1; i++)
+            {
+                students[i] = students[i + 1];
+            }
+            numStudents--;
+        }
+    }
+    bool Course::operator==(const Course &other) const
+    {
+        return name == other.name && code == other.code;
+    }
 
 }

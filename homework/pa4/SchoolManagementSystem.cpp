@@ -65,11 +65,11 @@ namespace PA4
                         std::stringstream ss(input);
                         ss >> name >> id;
                         Student s(name, id);
+                        add_student(s);
                     }
                     else if (buttonTwo == 2)
                     {
                         select_student();
-                        student_menu();
                     }
                 }
             }
@@ -94,7 +94,6 @@ namespace PA4
                     else if (buttonTwo == 2)
                     {
                         select_course();
-                        course_menu();
                     }
                 }
             }
@@ -112,7 +111,7 @@ namespace PA4
             }
         }
     }
-    void SchoolManagementSystem::student_menu()
+    void SchoolManagementSystem::student_menu(std::string name, int id)
     {
         int button = 1;
         int buttonTwo;
@@ -120,18 +119,19 @@ namespace PA4
         {
             std::cout << "0 up" << std::endl;
             std::cout << "1 delete_student" << std::endl;
-            std::cout << "2 add_selected_student_to_a_course" << std::endl;
-            std::cout << "3 drop_selected_student_from_a_course" << std::endl;
+            std::cout << "3 add_selected_student_to_a_course" << std::endl;
+            std::cout << "4 drop_selected_student_from_a_course" << std::endl;
             std::cin >> buttonTwo;
             if (buttonTwo == 1)
             {
-                // delete_student();
+                Student s(name, id);
+                delete_student(s);
             }
-            else if (buttonTwo == 2)
+            else if (buttonTwo == 3)
             {
                 // add_selected_student_to_a_course();
             }
-            else if (buttonTwo == 3)
+            else if (buttonTwo == 4)
             {
                 // drop_selected_student_from_a_course();
             }
@@ -141,8 +141,9 @@ namespace PA4
             }
         }
     }
-    void SchoolManagementSystem::course_menu()
+    void SchoolManagementSystem::course_menu(std::string code, std::string name)
     {
+        Course c(code, name);
         int button = 1;
         int buttonTwo;
         while (button != 0)
@@ -157,12 +158,11 @@ namespace PA4
             }
             else if (buttonTwo == 1)
             {
-                // delete_selected_course();
-                std::cout << "Course has been deleted." << std::endl;
+                delete_course(c);
             }
             else if (buttonTwo == 2)
             {
-                // list_students_registered_to_selected_course();
+                //list_students_registered_to_selected_course(c);
             }
         }
     }
@@ -212,11 +212,12 @@ namespace PA4
     void SchoolManagementSystem::select_student()
     {
         std::string input;
-        std::getline(std::cin, input); // hocaya sor
+        std::getline(std::cin, input);
         std::string name;
         int id;
         std::stringstream ss(input);
         ss >> name >> id;
+        student_menu(name, id);
     }
     void SchoolManagementSystem::select_course()
     {
@@ -224,5 +225,69 @@ namespace PA4
         std::string name;
         std::cin >> code;
         std::getline(std::cin >> std::ws, name);
+        course_menu(code, name);
     }
+    void SchoolManagementSystem::delete_student(Student s)
+    {
+        int index = -1;
+        for (int i = 0; i < numStudents; i++)
+        {
+            if (*students[i] == s)
+            {
+                index = i;
+                break;
+            }
+        }
+        if (index != -1)
+        {
+            delete students[index];
+            for (int i = index; i < numStudents - 1; i++)
+            {
+                students[i] = students[i + 1];
+            }
+            numStudents--;
+        }
+    }
+    void SchoolManagementSystem::delete_course(Course c)
+    {
+        int index = -1;
+        for (int i = 0; i < numCourses; i++)
+        {
+            if (*courses[i] == c)
+            {
+                index = i;
+                break;
+            }
+        }
+        if (index != -1)
+        {
+            delete courses[index];
+            for (int i = index; i < numCourses - 1; i++)
+            {
+                courses[i] = courses[i + 1];
+            }
+            numCourses--;
+        }
+    }
+    /*void SchoolManagementSystem::list_students_registered_to_selected_course(Course c)
+    {
+        for (int i = 0; i < numStudents; i++)
+        {
+            Course **courses = students[i]->getCourses();
+            for (int j = 0; j < students[i]->getNumCourses(); j++)
+            {
+                if (*courses[j] == c)
+                {
+                    std::cout << students[i]->getName() << " (" << students[i]->getID() << ") ";
+                    break;
+                }
+            }
+        }
+        std::cout << std::endl;
+    }*/
+
+    /*bool SchoolManagementSystem::operator==(const SchoolManagementSystem &other) const
+    {
+        return other == *this;
+    }*/
 }

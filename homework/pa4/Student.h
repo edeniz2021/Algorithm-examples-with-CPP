@@ -6,7 +6,7 @@
 
 namespace PA4
 {
-    class Student;
+    class Course;
     class Student
     {
     private:
@@ -21,8 +21,11 @@ namespace PA4
         ~Student();
         Course** getCourses() const;
         void add_course(Course *c);
+        void delete_course(Course *c);
         std::string getName()const{ return name;}
         int getID()const{ return ID;}
+        bool operator==(const Student &other) const;
+        int getNumCourses()const{ return numCourse;}
     };
 }
 
