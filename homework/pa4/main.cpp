@@ -1,8 +1,8 @@
 #include <iostream>
-#include "SchoolManagementSystem.h"
+#include "SchoolManagerSystem.hpp"
 using namespace PA4;
 int main() {
-    SchoolManagementSystem system;
+    SchoolManagerSystem system;
     system.run();
     return 0;
 }

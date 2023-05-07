@@ -1,4 +1,4 @@
-#include "Course.h"
+#include "Course.hpp"
 #include <string>
 namespace PA4
 {
@@ -14,6 +14,7 @@ namespace PA4
         name = n;
         code = c;
         students = nullptr;
+        numStudents = 0;
     }
     Course::~Course()
     {
@@ -23,40 +24,56 @@ namespace PA4
             students = nullptr;
         }
     }
-    Student **Course::getStudents() const
+    Student *Course::getStudents() const
     {
         return students;
     }
     void Course::add_student(Student *s)
     {
-        Student **new_students = new Student *[numStudents + 1];
-        for (int i = 0; i < numStudents; i++)
+        if (numStudents == 0)
         {
-            new_students[i] = students[i];
+            students = new Student[1];
+            students[0] = *s;
+            numStudents++;
         }
-        new_students[numStudents] = s;
-        delete[] students;
-        students = new_students;
-        numStudents++;
+        else
+        {
+            Student *newStudents = new Student[numStudents + 1];
+            for (int i = 0; i < numStudents; i++)
+            {
+                newStudents[i] = students[i];
+            }
+            newStudents[numStudents] = *s;
+            delete[] students;
+            students = newStudents;
+            numStudents++;
+        }
     }
     void Course::delete_student(Student *s)
     {
         int index = -1;
         for (int i = 0; i < numStudents; i++)
         {
-            if (students[i] == s)
+            if (students[i] == *s)
             {
                 index = i;
                 break;
             }
         }
+
         if (index != -1)
         {
-            delete students[index];
-            for (int i = index; i < numStudents - 1; i++)
+            Student *newStudents = new Student[numStudents - 1];
+            for (int i = 0, j = 0; i < numStudents; i++)
             {
-                students[i] = students[i + 1];
+                if (i != index)
+                {
+                    newStudents[j] = students[i];
+                    j++;
+                }
             }
+            delete[] students;
+            students = newStudents;
             numStudents--;
         }
     }
@@ -64,5 +81,4 @@ namespace PA4
     {
         return name == other.name && code == other.code;
     }
-
 }

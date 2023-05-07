@@ -1,22 +1,16 @@
-#include "SchoolManagementSystem.h"
+#include "SchoolManagerSystem.hpp"
 #include <iostream>
 #include <string>
 #include <sstream>
 namespace PA4
 {
-    SchoolManagementSystem::SchoolManagementSystem()
-    {
-        courses = nullptr;
-        students = nullptr;
-    }
-
-    void SchoolManagementSystem::run()
+    void SchoolManagerSystem::run()
     {
         int button = 1;
         int buttonTwo;
+        std::cout << "Main_Menu" << std::endl;
         while (button != 0)
         {
-            std::cout << "Main_Menu" << std::endl;
             std::cout << "0 exit" << std::endl;
             std::cout << "1 student" << std::endl;
             std::cout << "2 course" << std::endl;
@@ -99,7 +93,7 @@ namespace PA4
             }
         }
     }
-    void SchoolManagementSystem::student_menu(std::string name, int id)
+    void SchoolManagerSystem::student_menu(std::string name, int id)
     {
         Student s(name, id);
         int button = 1;
@@ -130,7 +124,7 @@ namespace PA4
             }
         }
     }
-    void SchoolManagementSystem::course_menu(std::string code, std::string name)
+    void SchoolManagerSystem::course_menu(std::string code, std::string name)
     {
         Course c(code, name);
         int button = 1;
@@ -155,86 +149,69 @@ namespace PA4
             }
         }
     }
-    void SchoolManagementSystem::add_course(Course c)
+    void SchoolManagerSystem::add_course(Course c)
     {
         if (numCourses == 0)
         {
-            courses = new Course *[1];
-            courses[0] = new Course(c);
+            courses = new Course[1];
+            courses[0] = c;
             numCourses++;
             return;
         }
-        Course **newCourses = new Course *[numCourses + 1];
+        Course *newCourses = new Course[numCourses + 1];
         for (int i = 0; i < numCourses; i++)
         {
             newCourses[i] = courses[i];
         }
-        newCourses[numCourses] = new Course(c);
+        newCourses[numCourses] = c;
         delete[] courses;
         courses = newCourses;
         numCourses++;
     }
 
-    void SchoolManagementSystem::add_student(Student s)
+    void SchoolManagerSystem::add_student(Student s)//to add user first increased memory then added to array
     {
         if (numStudents == 0)
         {
-            students = new Student *[1];
-            students[0] = new Student(s);
+            students = new Student[1];
+            students[0] = s;
             numStudents++;
             return;
         }
-        Student **newStudent = new Student *[numStudents + 1];
+        Student *newStudents = new Student[numStudents + 1];
         for (int i = 0; i < numStudents; i++)
         {
-            newStudent[i] = students[i];
+            newStudents[i] = students[i];
         }
-        newStudent[numStudents] = new Student(s);
+        newStudents[numStudents] = s;
         delete[] students;
-        students = newStudent;
+        students = newStudents;
         numStudents++;
     }
-    Course *SchoolManagementSystem::getCourseByIndex(int index)
+    void SchoolManagerSystem::list_all_students()// print listt al
     {
-        if (index < 0 || index >= numCourses)
-        {
-            return nullptr;
-        }
-        return courses[index];
-    }
-
-    Student *SchoolManagementSystem::getStudentByIndex(int index)
-    {
-        if (index < 0 || index >= numStudents)
-        {
-            return nullptr;
-        }
-        return students[index];
-    }
-    void SchoolManagementSystem::list_all_students()
-    {
-        std::cout << "List of all students:" << std::endl;
         for (int i = 0; i < numStudents; i++)
         {
-            std::cout << i + 1 << " " << students[i]->getName() << " " << students[i]->getID() << std::endl;
+            std::cout << i + 1 << " " << students[i].getName() << " " << students[i].getID() << std::endl;
         }
+        std::cout << std::endl;
     }
 
-    void SchoolManagementSystem::list_all_courses()
+    void SchoolManagerSystem::list_all_courses()
     {
-        std::cout << "List of all courses:" << std::endl;
         for (int i = 0; i < numCourses; i++)
         {
-            std::cout << i + 1 << " " << courses[i]->getName() << " " << courses[i]->getCode() << std::endl;
+            std::cout << i + 1 << " " << courses[i].getName() << " " << courses[i].getCode() << std::endl;
         }
+        std::cout << std::endl;
     }
-    void SchoolManagementSystem::select_student()
+    void SchoolManagerSystem::select_student()
     {
         int id;
         std::string name;
         std::string input;
         name = "";
-        while (std::cin >> input)
+        while (std::cin >> input)//It removes the spaces and takes the input and defines it.
         {
             std::istringstream ss(input);
             if (ss >> id)
@@ -250,7 +227,7 @@ namespace PA4
         }
         student_menu(name, id);
     }
-    void SchoolManagementSystem::select_course()
+    void SchoolManagerSystem::select_course()
     {
         std::string code;
         std::string name;
@@ -258,12 +235,13 @@ namespace PA4
         std::getline(std::cin >> std::ws, name);
         course_menu(code, name);
     }
-    void SchoolManagementSystem::delete_student(Student s)
+
+    void SchoolManagerSystem::delete_student(Student s)//It finds which index it is in the array and removes it from the array.
     {
         int index = -1;
         for (int i = 0; i < numStudents; i++)
         {
-            if (*students[i] == s)
+            if (students[i].getName() == s.getName() && students[i].getID() && s.getID())
             {
                 index = i;
                 break;
@@ -271,7 +249,6 @@ namespace PA4
         }
         if (index != -1)
         {
-            delete students[index];
             for (int i = index; i < numStudents - 1; i++)
             {
                 students[i] = students[i + 1];
@@ -279,12 +256,13 @@ namespace PA4
             numStudents--;
         }
     }
-    void SchoolManagementSystem::delete_course(Course c)
+
+    void SchoolManagerSystem::delete_course(Course c)
     {
         int index = -1;
         for (int i = 0; i < numCourses; i++)
         {
-            if (*courses[i] == c)
+            if (courses[i].getCode() == c.getCode() && courses[i].getName() == c.getName())
             {
                 index = i;
                 break;
@@ -292,7 +270,6 @@ namespace PA4
         }
         if (index != -1)
         {
-            delete courses[index];
             for (int i = index; i < numCourses - 1; i++)
             {
                 courses[i] = courses[i + 1];
@@ -300,38 +277,25 @@ namespace PA4
             numCourses--;
         }
     }
-    void SchoolManagementSystem::list_students_registered_to_the_selected_course(Course c)
+    void SchoolManagerSystem::list_students_registered_to_the_selected_course(Course c)
     {
-        bool found = false;
+        int count = 1;
         for (int i = 0; i < numStudents; i++)
         {
-            Course **courses = students[i]->getCourses();
-            for (int j = 0; j < students[i]->getNumCourses(); j++)
+            if (students[i].isRegisteredToCourse(c))
             {
-                if (*courses[j] == c)
-                {
-                    std::cout << students[i]->getName() << " " << students[i]->getID() << std::endl;
-                    found = true;
-                    break;
-                }
+                std::cout << count << " " << students[i].getName() << " " << students[i].getID() << std::endl;
+                count++;
             }
         }
-        if (!found)
-        {
-            std::cout << "No students are registered to this course." << std::endl;
-        }
+        std::cout << std::endl;
     }
-    void SchoolManagementSystem::add_selected_student_to_a_course(Student s)
+    void SchoolManagerSystem::add_selected_student_to_a_course(Student s)
     {
-        if (numCourses == 0)
-        {
-            std::cout << "There are no courses to add the student to." << std::endl;
-            return;
-        }
         std::cout << "0 up" << std::endl;
         for (int i = 0; i < numCourses; i++)
         {
-            std::cout << i + 1 << " " << courses[i]->getCode() << " " << courses[i]->getName() << std::endl;
+            std::cout << i + 1 << " " << courses[i].getName() << " " << courses[i].getCode() << std::endl;
         }
         int selection;
         std::cin >> selection;
@@ -344,31 +308,51 @@ namespace PA4
         {
             student_menu(s.getName(), s.getID());
         }
+        Course c(courses[selection - 1].getName(), courses[selection - 1].getCode());//create new obje
+
+        bool studentFound = false;
+        bool courseFound = false;
+        int studentIndex = -1;
+        int courseIndex = -1;
+
+        for (int i = 0; i < numStudents; i++)
+        {
+            if (students[i].getName() == s.getName() && students[i].getID() == s.getID())
+            {
+                studentFound = true;
+                studentIndex = i;
+                break;
+            }
+        }
+
+        for (int i = 0; i < numCourses; i++)
+        {
+            if (courses[i].getCode() == c.getCode() && courses[i].getName() == c.getName())
+            {
+                courseFound = true;
+                courseIndex = i;
+                break;
+            }
+        }
+
+        if (studentFound && courseFound)
+        {
+            students[studentIndex].add_course(&c);//add student to course
+            courses[courseIndex].add_student(&s);
+        }
         else
         {
-            Course *c = courses[selection - 1];
-            addStudentToCourse(s, *c);
-            std::cout << "Student added to course " << c->getName() << "." << std::endl;
+            std::cout << "Either the student or the course was not found. Please try again." << std::endl;
         }
+        std::cout << std::endl;
     }
-    void SchoolManagementSystem::addStudentToCourse(Student &student, Course &course)
+    void SchoolManagerSystem::drop_selected_student_from_a_course(Student s)
     {
-        student.add_course(&course);
-        course.add_student(&student);
-    }
-    void SchoolManagementSystem::drop_selected_student_from_a_course(Student s)
-    {
-        if (numCourses == 0)
-        {
-            std::cout << "There are no courses to drop the student to." << std::endl;
-            return;
-        }
         std::cout << "0 up" << std::endl;
         for (int i = 0; i < numCourses; i++)
         {
-            std::cout << i + 1 << courses[i]->getCode() << " " << courses[i]->getName() << std::endl;
+            std::cout << i + 1 << " " << courses[i].getName() << " " << courses[i].getCode() << std::endl;
         }
-
         int selection;
         std::cin >> selection;
         if (selection < 0 || selection > numCourses)
@@ -380,30 +364,54 @@ namespace PA4
         {
             student_menu(s.getName(), s.getID());
         }
+
+        Course c(courses[selection -1].getCode(), courses[selection -1].getName() );
+
+        bool studentFound = false;
+        bool courseFound = false;
+        int studentIndex = -1;
+        int courseIndex = -1;
+
+        for (int i = 0; i < numStudents; i++)
+        {
+            if (students[i].getName() == s.getName() && students[i].getID() == s.getID())
+            {
+                studentFound = true;
+                studentIndex = i;
+                break;
+            }
+        }
+
+        for (int i = 0; i < numCourses; i++)
+        {
+            if (courses[i].getCode() == c.getCode() && courses[i].getName() == c.getName())
+            {
+                courseFound = true;
+                courseIndex = i;
+                break;
+            }
+        }
+
+        if (studentFound && courseFound)
+        {
+            bool dropped = students[studentIndex].dropFromCourse(c);
+            if (dropped)
+            {
+                courses[courseIndex].delete_student(&s);
+            }
+        }
         else
         {
-            Course *c = courses[selection - 1];
-            dropStudentToCourse(s, *c);
-            std::cout << "Student added to course " << c->getName() << "." << std::endl;
+            std::cout << "Either the student or the course was not found. Please try again." << std::endl;
         }
+        std::cout << std::endl;
     }
-    void SchoolManagementSystem::dropStudentToCourse(Student &student, Course &course)
-    {
-        student.delete_course(&course);
-        course.delete_student(&student);
-    }
-    SchoolManagementSystem::~SchoolManagementSystem()
-    {
-        for (int i = 0; i < numStudents; ++i)
-        {
-            delete students[i];
-        }
-        delete[] students;
 
-        for (int i = 0; i < numCourses; ++i)
-        {
-            delete courses[i];
-        }
+    SchoolManagerSystem::~SchoolManagerSystem()
+    {
         delete[] courses;
+        courses = nullptr;
+        delete[] students;
+        students = nullptr;
     }
 }
