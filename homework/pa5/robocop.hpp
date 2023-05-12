@@ -5,10 +5,11 @@
 
 class robocop : public humanic {
 public:
-    robocop(int newStrength, int newHit, std::string name);
+    robocop(int creation_sequence_number);
     std::string getType() override;
     int getDamage() override;
-    char getSymbol() const override;
+    void setHitpoint(int damage)override;
+    int getHit()override;
 };
 
-#endif // ROBOCOP_H
+#endif

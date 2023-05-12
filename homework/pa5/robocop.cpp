@@ -3,26 +3,25 @@
 #include "robocop.hpp"
 #include "humanic.hpp"
 
-using namespace std;
-
-robocop::robocop(int newStrength, int newHit, string name):humanic(newStrength,newHit,name){ type = 0;}
+robocop::robocop(int creation_sequence_number)
+    : humanic(30, 40, "_" + std::to_string(creation_sequence_number)) {}
 //Setting up the desired algorithm for damage
 //With a %15 chance OptimusPrime robots inflict
 int robocop::getDamage()
 {
-    if ((rand( ) % 100) < 15)	
-    {
-		cout <<"robocop special double attack" <<endl;
-        return humanic::getDamage() * 2;
-	}
-
-        cout <<"robocop normal attack" <<endl;
-        return humanic::getDamage();
-   
+    int damage = humanic::getDamage();
+    std::cout << getType() << " attacks for " << damage << " points!" << std::endl;
+    return damage;  
 }
-string robocop::getType(){
-    return "robocop";
+std::string robocop::getType(){
+    std::string newK = "robocop" +name;
+    return newK;
 }
-char robocop::getSymbol() const {
-    return 'C';
+void robocop::setHitpoint(int damage)
+{
+    hit -=damage;
+}
+int robocop::getHit()
+{
+    return hit;
 }

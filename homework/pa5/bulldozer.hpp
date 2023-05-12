@@ -5,10 +5,11 @@
 
 class bulldozer : public Robot {
 public:
-    bulldozer(int newStrength, int newHit, std::string name);
+    bulldozer(int creation_sequence_number);
     std::string getType() override;
     int getDamage() override;
-    char getSymbol() const override;
+    void setHitpoint(int damage)override;
+    int getHit()override;
 };
 
-#endif // BULLDOZER_H
+#endif 

@@ -8,9 +8,11 @@ class Robot
 public:
     Robot();
     Robot(int newType, int newStrength, int newHit, std::string newName);
-    virtual std::string getType() = 0;
-    virtual int getDamage() = 0;
-    virtual char getSymbol() const = 0;
+    virtual ~Robot();
+    virtual std::string getType();
+    virtual int getDamage();
+    virtual void setHitpoint(int damage)= 0;//pure virtual not implement
+    virtual int getHit()= 0;
 
 protected:
     int strength;

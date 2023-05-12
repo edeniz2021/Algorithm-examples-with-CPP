@@ -3,17 +3,23 @@
 #include "bulldozer.hpp"
 #include "Robot.hpp"
 
-using namespace std;
-bulldozer::bulldozer(int newStrength, int newHit,string newName):Robot( 3, newStrength, newHit, newName){}
+bulldozer::bulldozer(int creation_sequence_number)
+    : Robot(3, 50, 200, "_" + std::to_string(creation_sequence_number)){}
 int bulldozer::getDamage()
 {
-    int  damage = (rand() % strength) + 1;
+    int damage=Robot::getDamage();
     std::cout << getType() << " attacks for " << damage << " points!" << std::endl;
     return damage;
 }
-string bulldozer::getType(){
-    return "bulldozer";
+std::string bulldozer::getType(){
+    std::string newK = "bulldozer" +name;
+    return newK;
 }
-char bulldozer::getSymbol() const {
-    return 'B';
+void bulldozer::setHitpoint(int damage)
+{
+    hit -=damage;
+}
+int bulldozer::getHit()
+{
+    return hit;
 }

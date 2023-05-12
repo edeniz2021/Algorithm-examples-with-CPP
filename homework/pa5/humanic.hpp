@@ -5,10 +5,9 @@
 
 class humanic : public Robot {
 public:
+humanic();
     humanic(int newStrength, int newHit, std::string name);
-    std::string getType() override;
     int getDamage() override;
-    char getSymbol() const override;
 };
 
-#endif // HUMANIC_H
+#endif 

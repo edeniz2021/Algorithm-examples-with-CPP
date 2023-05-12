@@ -3,19 +3,26 @@
 #include "roomba.hpp"
 #include "Robot.hpp"
 
-using namespace std;
-roomba::roomba(int newStrength, int newHit, string name) : Robot( 2, newStrength, newHit, name) {}
+roomba::roomba(int creation_sequence_number)
+    : Robot(2, 3, 10, "_" + std::to_string(creation_sequence_number)){}
 int roomba::getDamage()
 {
-    int  damage = (rand() % strength) + 1;
+    int  damage = Robot::getDamage();
     std::cout << getType() << " attacks for " << damage << " points!" << std::endl;
-    return damage*2;
+    int damage_2=Robot::getDamage();
+    std::cout << getType() << " attacks for " << damage_2 << " points!" << std::endl;
+    return damage+damage_2;
 }
-
-string roomba::getType()
+std::string roomba::getType()
 {
-    return "roomba";
+    std::string newK = "roomba" +name;
+    return newK;
 }
-char roomba::getSymbol() const {
-    return 'R';
+void roomba::setHitpoint(int damage)
+{
+    hit -=damage;
+}
+int roomba::getHit()
+{
+    return hit;
 }

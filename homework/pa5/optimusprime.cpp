@@ -3,26 +3,28 @@
 #include "optimusprime.hpp"
 #include "humanic.hpp"
 
-using namespace std;
-
-optimusprime::optimusprime(int newStrength, int newHit, string name):humanic(newStrength,newHit,name){ type = 0;}
-//Setting up the desired algorithm for damage
-//With a %15 chance OptimusPrime robots inflict
+optimusprime::optimusprime(int creation_sequence_number)
+    : humanic(100, 100, "_" + std::to_string(creation_sequence_number)) {}
+// Setting up the desired algorithm for damage
+// With a %15 chance OptimusPrime robots inflict
 int optimusprime::getDamage()
 {
-    if ((rand( ) % 100) < 15)	
-    {
-		cout <<"OptimusPrime special double attack" <<endl;
-        return humanic::getDamage() * 2;
-	}
-
-        cout <<"OptimusPrime normal attack" <<endl;
-        return humanic::getDamage();
-   
+    int damage=humanic::getDamage();
+    if ((rand() % 100) < 15)
+        damage*=2;
+    std::cout << getType() << " attacks for " << damage << " points!" << std::endl;
+    return damage;
 }
-string optimusprime::getType(){
-    return "optimusprime";
+std::string optimusprime::getType()
+{
+    std::string newK = "optimusprime" +name;
+    return newK;
 }
-char optimusprime::getSymbol() const {
-    return 'O';
+void optimusprime::setHitpoint(int damage)
+{
+    hit -=damage;
+}
+int optimusprime::getHit()
+{
+    return hit;
 }

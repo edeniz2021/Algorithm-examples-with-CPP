@@ -5,11 +5,11 @@
 
 class roomba : public Robot {
 public:
-roomba();
-    roomba(int newStrength, int newHit, std::string name);
+    roomba(int creation_sequence_number);
     std::string getType() override;
     int getDamage() override;
-    char getSymbol() const override;
+    void setHitpoint(int damage)override;
+    int getHit()override;
 };
 
 #endif 
