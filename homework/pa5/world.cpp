@@ -98,6 +98,8 @@ void World::simulate()
                             std::cout << "The new hitpoints of " << grid[i][j + 1]->getType() << " is " << grid[i][j + 1]->getHit() << std::endl;
                             if (grid[i][j + 1]->getHit() <= 0)
                             {
+                                std::cout << grid[i][j + 1]->getType()<< " is dead."<<std::endl;
+                                std::cout<< std::endl;
                                 grid[i][j + 1] = nullptr;
                                 dead = 1;
                                 j--;
@@ -111,6 +113,8 @@ void World::simulate()
                                 std::cout << "The new hitpoints of " << grid[i][j]->getType() << " is " << grid[i][j]->getHit() << std::endl;
                                 if (grid[i][j]->getHit() <= 0)
                                 {
+                                    std::cout << grid[i][j]->getType()<< " is dead."<<std::endl;
+                                    std::cout<< std::endl;
                                     grid[i][j] = nullptr;
                                     dead = 1;
                                 }
@@ -129,6 +133,8 @@ void World::simulate()
                                     std::cout << "The new hitpoints of " << grid[i + 1][0]->getType() << " is " << grid[i + 1][0]->getHit() << std::endl;
                                     if (grid[i + 1][0]->getHit() <= 0)
                                     {
+                                        std::cout << grid[i+1][0]->getType()<< " is dead."<<std::endl;
+                                        std::cout<< std::endl;
                                         grid[i + 1][0] = nullptr;
                                         dead = 1;
                                         j++;
@@ -142,6 +148,8 @@ void World::simulate()
                                         std::cout << "The new hitpoints of " << grid[i][j]->getType() << " is " << grid[i][j]->getHit() << std::endl;
                                         if (grid[i][j]->getHit() <= 0)
                                         {
+                                            std::cout << grid[i][j]->getType()<< " is dead."<<std::endl;
+                                            std::cout<< std::endl;
                                             grid[i][j] = nullptr;
                                             dead = 1;
                                         }
