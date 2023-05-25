@@ -18,6 +18,7 @@ class Catalog
     void setPrototype();
     void throw_exception();
     void sortType(std::string type);
+    void searchType(std::string arg,std::string type);
 
     private:
     std::string catalogName;

@@ -113,7 +113,7 @@ void Catalog<T>::throw_exception()
     }
     std::string uni = std::to_string(unique);
     allData += uni + " unique entries" + "\n";
-    std::cout << allData;
+    searchType("2007", "year");
     sortType("year");
 }
 template <class T>
@@ -134,6 +134,46 @@ void Catalog<T>::sortType(std::string type)
     }
     std::cout << std::endl;
     }*/
+    std::cout << allData;
+}
+template <class T>
+void Catalog<T>::searchType(std::string arg, std::string type)
+{
+    int i,j,x;
+    try
+    {
+        x = -1;
+        for (i = 0; i < prototype.size(); ++i)
+        {
+            if (prototype[i] == type)
+            {
+                x = i;
+                break;
+            }
+        }
+        if (x != -1)
+        {
+            for (i = 0; i < dataVec.size(); ++i)
+            {
+                if (dataVec[i][x] == arg)
+                {
+                    for (j = 0; j < dataVec[i].size(); ++j)
+                    {
+                        allData+= dataVec[i][j]+ " ";
+                    }
+                    allData+= "\n";
+                }
+            }
+        }
+        else
+        {
+            throw std::runtime_error("Exception: command is wrong");
+        }
+    }
+    catch (const std::exception &e)
+    {
+        allData += std::string(e.what()) + "\n";
+    }
 }
 
 template <class T>
