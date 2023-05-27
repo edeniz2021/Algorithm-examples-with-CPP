@@ -116,7 +116,7 @@ void Catalog<T>::search_objects(const std::string &searchStr, const std::string 
 
         if (field == "title" && obj.get_title().find(searchStr) != std::string::npos)
         {
-            allData += search + "\n";
+            allData += search;
             allData += obj.get_data() + "\n";
             found = true;
         }
