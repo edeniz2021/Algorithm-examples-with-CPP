@@ -1,0 +1,7 @@
+Catalog read: music
+4 unique entries
+search "Joe" in "artists"
+"Professor Satchafunkilus and the Musterion of Rock" "Joe Satriani" "2008" "Guitar Virtuoso"
+Exception: command is wrong
+sort "authors"
+
